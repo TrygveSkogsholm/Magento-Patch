@@ -1,0 +1,227 @@
+<style>
+.lien-popup span
+{								   
+    position       :  absolute;
+    top            :  -2000em;
+    left           :  -2000em;
+    width          :  1px;
+    height         :  1px;
+    overflow       :  hidden; 
+    background     :  #ffffe1;   /* Définition du fond, sinon on a le même que notre lien */
+    border         :  1px solid #000000; /* Définition des bordures */
+    text-decoration: none;
+    color: black;
+    text-align: left;
+}  
+
+
+.lien-popup:hover span
+{								   
+	top        :  auto;
+    left       :  auto;
+    width      :  300px;
+    height     :  auto;
+    overflow   :  visible;
+}  
+
+</style>
+
+<script>
+
+//***************************************************************************************************************************
+//Fonction pour trier la liste
+function setSortBy(field)
+{
+	document.getElementById('sort_by').value = field;
+	document.getElementById('form_search').submit();;
+}
+
+//***************************************************************************************************************************
+//fonction pour reseter les filtres
+function resetFilters()
+{
+	document.location.href = '<?php echo $this->getUrl('Purchase/SupplyNeeds/List'); ?>';
+}
+
+//****************************************************************************************************************************
+//Sélectionne toutes les case a cocher de sélection
+function selectAll()
+{
+	for (i=0; i < document.form_products.elements.length; i++) 
+	{
+		if (document.form_products.elements[i] && document.form_products.elements[i].name != null)
+		{
+			if (document.form_products.elements[i].name.indexOf('ch_') != -1) 
+			{
+				document.form_products.elements[i].checked = document.getElementById('all').checked; 	
+			}
+		}
+	}
+}
+
+//****************************************************************************************************************************
+//cree une commande en y ajoutant les produits sélectionnés
+function CreateOrder()
+{
+	//Verifie qu'il y ait au moins un produit de sélectionné
+	var OneProductSelected;
+	var i;
+	OneProductSelected = false;
+	for (i=0; i < document.form_products.elements.length; i++) 
+	{
+		if (document.form_products.elements[i] && document.form_products.elements[i].name != null)
+		{
+			if (document.form_products.elements[i].name.indexOf('ch_') != -1) 
+			{
+				if (document.form_products.elements[i].checked)
+					OneProductSelected = true;
+			}
+		}
+	}
+	
+	//Valide le formulaire
+	if (OneProductSelected)
+	{
+		document.getElementById('form_products').submit();
+	}
+	else
+	{
+		alert('<?php echo $this->__('Please select at least one product'); ?>');
+	}
+}
+
+</script>
+
+<div class="entry-edit">
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Supply Needs')?></h3></td>
+            <td align="right">
+                <button onclick="document.location.href='<?php echo $this->getUrl('Purchase/SupplyNeeds/RefreshList'); ?>'" class="scalable" type="button"><span><?php echo $this->__('Refresh cache')?></span></button>
+                <button onclick="document.getElementById('form_search').submit();" class="scalable" type="button"><span><?php echo $this->__('Search')?></span></button>
+                <button onclick="resetFilters()" class="scalable reset" type="button"><span><?php echo $this->__('Reset')?></span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div align="right">
+<i><?php echo $this->__('Supply needs are updated every minutes.'); ?></i>
+</div>
+
+<div class="grid">
+	<table cellspacing="0" class="data" width="100%">
+
+		<form id="form_search" name="form_search" method="GET">
+		<input type="hidden" id="sort_by" name="sort_by" value="<?php echo $this->sortBy(); ?>">
+		
+		<thead>
+			<tr class="headings">
+				<th class="a-center"><input type="checkbox" name="all" id="all" onclick="selectAll();"></th>
+				<th class="a-center"><a href="javascript:setSortBy('manufacturer');"><?php echo $this->__('Manufacturer')?></a><?php echo $this->getManufacturerListAsCombo('manufacturer', $this->manufacturerFilter()); ?></th>
+				<th class="a-center"><a href="javascript:setSortBy('description');"><?php echo $this->__('Description')?></a></th>
+				<th class="a-center" width="100"><a href="javascript:setSortBy('status');"><?php echo $this->__('Status')?></a><?php echo $this->getStatusListAsCombo('status', $this->statusFilter()); ?></th>
+				<th class="a-center"><?php echo $this->__('Details')?></th>
+				<th class="a-center"><a href="javascript:setSortBy('needed_qty');"><?php echo $this->__('Needed Qty')?></a></th>
+				<th class="a-center" width="120"><a href="javascript:setSortBy('dead_line');"><?php echo $this->__('Dead Line<br>for Delivery')?></a></th>
+				<th class="a-center" width="120"><a href="javascript:setSortBy('purchase_dead_line');"><?php echo $this->__('Dead Line<br>for Purchase')?></a></th>
+				<th class="a-center"><?php echo $this->__('Suppliers')?><br><?php echo $this->getSupplierListAsCombo('supplier', $this->supplierFilter()); ?></th>
+			</tr>
+		</thead>
+		
+		</form>
+		
+		<form id="form_products" name="form_products" method="POST" action="<?php echo $this->getUrl('Purchase/Orders/CreateOrderAndAddProducts') ?>">
+		<input name="form_key" type="hidden" value="<?php echo $this->getFormKey() ?>" />
+
+		
+		<tbody>
+		<?php
+			$collection = $this->getList();
+			foreach ($collection as $item)
+			{
+				$UnderlinedStart = '';
+				$UnderlinedStop = '';
+				if ($item->getsn_needed_qty() <= 0)
+				{
+					$UnderlinedStart = '<font color="#129218">';
+					$UnderlinedStop = '</i>';
+				}
+				else 
+				{
+					if ($item->getsn_is_critical() == 1)
+					{
+						$UnderlinedStart = '<font color="#ff0000">';
+						$UnderlinedStop = '</i>';
+					}
+				}
+								
+				echo '<tr>';
+				echo '<td align="center"><input type="checkbox" id="ch_'.$item->getsn_product_id().'" name="ch_'.$item->getsn_product_id().'" value="1"></td>';
+				echo '<td>'.$UnderlinedStart.$item->getsn_manufacturer_name().'</td>';
+				echo '<td><a href="'.$this->getUrl('Purchase/Products/Edit').'product_id/'.$item->getsn_product_id().'">'.$UnderlinedStart.$item->getsn_product_name().'<input type="hidden" id="name_'.$item->getsn_product_id().'" name="name_'.$item->getsn_product_id().'" value="'.$item->getsn_product_name().'"></a></td>';
+				echo '<td align="center">'.$UnderlinedStart.$this->__($item->getsn_status()).'</td>';
+				
+				echo '<td align="center">';
+				//rajoute le span pour le popup
+				echo '<a href="#" class="lien-popup">';
+				echo '<img src="'.$this->getSkinUrl('images/note_msg_icon.gif').'">';
+				echo '<span>'.nl2br($item->getsn_details()).'</span>';
+				echo '</a>';
+		
+				//rajoute un panneau si warning
+				if ($item->getsn_is_warning())
+					echo ' <img src="'.$this->getSkinUrl('images/purchase/warning.gif').'" alt="Warning" height="16">';
+				echo '</td>';
+				
+				echo '<td align="center">'.$UnderlinedStart.$item->getsn_needed_qty().'<input type="hidden" id="qty_'.$item->getsn_product_id().'" name="qty_'.$item->getsn_product_id().'" value="'.$item->getsn_needed_qty().'"></td>';
+				if ($item->getsn_deadline() != '')
+				{
+					echo '<td align="center">';
+					echo $this->helper('core')->formatDate($item->getsn_deadline(), 'medium');
+					echo '</td>';
+					echo '<td align="center">';
+					echo $this->helper('core')->formatDate($item->getsn_purchase_deadline(), 'medium');
+					echo '</td>';
+				}
+				else 
+				{
+					echo '<td>&nbsp;</td><td>&nbsp;</td>';
+				}
+				echo '<td>'.$UnderlinedStart.$item->getsn_suppliers_name ().'&nbsp;</td>';
+				echo '</tr>';
+			}
+		?>
+		</tbody>
+	</table>
+</div>
+
+<p>&nbsp;</p>
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Create Order and Add Selected Products')?></h3></td>
+            <td align="right">
+                <button onclick="CreateOrder()" class="scalable save" type="button"><span><?php echo $this->__('Create')?></span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="entry-edit">
+    
+        <fieldset id="my-fieldset">
+            <table cellspacing="0" class="form-list">
+                <tr>
+                    <td class="label"><?php echo $this->__('Supplier')?></td>
+                    <td class="input-ele"><?php echo $this->getSuppliersAsCombo('supplier_create'); ?></td>
+                </tr>
+            </table>
+        </fieldset>
+
+</div>
+</form>
+
+</div>

@@ -1,0 +1,72 @@
+		
+		<div class="entry-edit">
+			    <div class="entry-edit-head"> 
+				    <h4 class="icon-head head-edit-form fieldset-legend"><?php echo$this->__('Account Information')?></h4> 
+			    </div>
+		        <fieldset id="my-fieldset">
+		            <table cellspacing="0" class="form-list">
+		                <tr>
+		                    <td class="label"><?php echo$this->__('Account Login')?></td>
+		                    <td class="input-ele"><input type="text" id="sup_account_login" name="sup_account_login" style="width:400px;" value="<?php echo $this->getSupplier()->getsup_account_login(); ?>"></td>
+		                </tr>
+		                <tr>
+		                    <td class="label"><?php echo$this->__('Account Password')?></td>
+		                    <td class="input-ele"><input type="text" id="sup_account_password" name="sup_account_password" style="width:400px;" value="<?php echo $this->getSupplier()->getsup_account_password(); ?>"></td>
+		                </tr>
+		
+		            </table>
+		        </fieldset>
+		</div>
+		
+		<div class="entry-edit">
+			    <div class="entry-edit-head"> 
+				    <h4 class="icon-head head-edit-form fieldset-legend"><?php echo$this->__('After Sale Information')?></h4> 
+			    </div>
+		        <fieldset id="my-fieldset">
+		            <table cellspacing="0" class="form-list">
+		                <tr>
+		                    <td class="label"><?php echo$this->__('Phone')?></td>
+		                    <td class="input-ele"><textarea id="sup_rma_tel" name="sup_rma_tel" cols="50" rows="2"><?php echo $this->getSupplier()->getsup_rma_tel(); ?></textarea></td>
+		                </tr>
+		                <tr>
+		                    <td class="label">Email</td>
+		                    <td class="input-ele"><input type="text" id="sup_rma_mail" name="sup_rma_mail" style="width:400px;" value="<?php echo $this->getSupplier()->getsup_rma_mail(); ?>"></td>
+		                </tr>
+		                <tr>
+		                    <td class="label"><?php echo$this->__('Comments')?></td>
+		                    <td class="input-ele"><textarea id="sup_rma_comments" name="sup_rma_comments" cols="100" rows="5"><?php echo $this->getSupplier()->getsup_rma_comments(); ?></textarea></td>
+		                </tr>
+		            </table>
+		        </fieldset>
+		</div>
+
+<div class="entry-edit">
+	    <div class="entry-edit-head"> 
+		    <h4 class="icon-head head-edit-form fieldset-legend"><?php echo$this->__('Purchase Information')?></h4> 
+	    </div>
+        <fieldset id="my-fieldset">
+            <table cellspacing="0" class="form-list">
+                <tr>
+                    <td class="label"><?php echo$this->__('Sale Online')?></td>
+                    <td class="input-ele"><input type="checkbox" value="1" id="sup_sale_online" name="sup_sale_online" style="width:400px;" <?php if ($this->getSupplier()->getsup_sale_online() == 1) {echo " checked ";} ?>></td>
+		                </tr>
+		                <tr>
+                    <td class="label"><?php echo$this->__('Carrier')?></td>
+                    <td class="input-ele"><input type="text" id="sup_carrier" name="sup_carrier" style="width:400px;" value="<?php echo $this->getSupplier()->getsup_carrier(); ?>"></td>
+                </tr>
+
+                <tr>
+                    <td class="label"><?php echo$this->__('Order Mini')?></td>
+                    <td class="input-ele"><input type="text" id="sup_order_mini" name="sup_order_mini" style="width:400px;" value="<?php echo $this->getSupplier()->getsup_order_mini(); ?>"></td>
+		                </tr>
+		                <tr>
+                    <td class="label"><?php echo$this->__('Supply Delay Max')?></td>
+                    <td class="input-ele"><input type="text" id="sup_supply_delay_max" name="sup_supply_delay_max" style="width:400px;" value="<?php echo $this->getSupplier()->getsup_supply_delay_max(); ?>"></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo$this->__('Supply Delay')?></td>
+                    <td class="input-ele"><input type="text" id="sup_supply_delay" name="sup_supply_delay" style="width:400px;" value="<?php echo $this->getSupplier()->getsup_supply_delay(); ?>"></td>
+                </tr>
+            </table>
+        </fieldset>
+</div>

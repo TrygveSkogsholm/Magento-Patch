@@ -1,0 +1,135 @@
+<style>
+.lien-popup span
+{								   
+    position       :  absolute;
+    top            :  -2000em;
+    left           :  -2000em;
+    width          :  1px;
+    height         :  1px;
+    overflow       :  hidden; 
+    background     :  #ffffe1;   /* Définition du fond, sinon on a le même que notre lien */
+    border         :  1px solid #000000; /* Définition des bordures */
+    text-decoration: none;
+    color: black;
+    text-align: left;
+}  
+
+
+.lien-popup:hover span
+{								   
+	top        :  auto;
+    left       :  auto;
+    width      :  200px;
+    height     :  auto;
+    overflow   :  visible;
+}  
+
+</style>
+
+<input type="hidden" id="po_num" name="po_num" value="<?php echo $this->getOrder()->getId(); ?>">
+<div class="entry-edit">
+    
+        <div class="grid">
+	        <table cellspacing="0" class="data" width="100%" cellspacing="0">
+	        	<thead>
+					<tr class="headings">
+			        	<th class="a-center">Infos</th>
+			        	<th class="a-center">Sku</th>
+			        	<th>Description</th>
+			        	<th class="a-center"><?php echo$this->__('Model #')?></th>
+			        	<th class="a-center"><?php echo$this->__('Qty')?></th>
+			        	<th class="a-center"><?php echo$this->__('Delivered Qty')?></th>
+			        	<th class="a-center"><?php echo$this->__('First Cost')?></th>
+			        	<th class="a-center"><?php echo$this->__('Last Price HT')?></th>
+			        	<th class="a-center"><?php echo$this->__('HTS duty rate')?></th>
+			        	<th class="a-center"><?php echo$this->__('Landed Cost')?></th>
+			        	<th class="a-center"><?php echo$this->__('Total First Cost')?></th>
+			        	<th class="a-center"><?php echo$this->__('Delete')?></th>
+			        </tr>
+		       </thead>
+		       <tbody>
+			        <?php
+						//Affiche la liste des lignres commande
+						$collection = $this->getProducts();
+						if (sizeof($collection) == 0)
+						{
+							echo '<tr><td colspan="13" align="center">'.$this->__('No items').'</td></tr>';
+						}
+						foreach ($collection as $item)
+						{
+							echo '<tr>';
+							
+							//Définit les détails de beosin d'appro sur le produit
+							$product = mage::getModel('catalog/product')->load($item->getpop_product_id());
+							$SupplyNeedsItem = mage::getModel('Purchase/SupplyNeeds')->getSupplyNeedsForProduct($product);
+							$details = $this->__('Current stock').' : '.(int)$SupplyNeedsItem['stock']->getQty();
+							$details .= "\n".$this->__('Stock Mini').' : '.(int)$SupplyNeedsItem['stock']->getnotify_stock_qty();
+							$details .= "\n".$this->__('Ordered Qty').' : '.$SupplyNeedsItem['ordered_qty'];
+							$details .= "\n".$this->__('Needed Qty').' : '.$SupplyNeedsItem['needed_qty'];
+							$details .= "\n".$this->__('Already Ordered Qty').' : '.$SupplyNeedsItem['waiting_for_deliver_qty'];
+							$details .= "\n".$SupplyNeedsItem['details'];		
+							
+							$productImage = Mage::getBaseUrl('media').'catalog/product'.$product->getsmall_image(); //mage::helper('catalog/image')->init($product, 'small_image')->resize(50, 50);
+							//echo '<td><img src="'.$productImage.'" width="50" height="50"></td>';
+							echo '<td align="center">';
+							//rajoute le span pour le popup
+							echo '<a href="#" class="lien-popup">';
+							echo '<img src="'.$this->getSkinUrl('images/note_msg_icon.gif').'">';
+							echo '<span>'.nl2br($details).'</span>';
+							echo '</a>';
+							echo '</td>';
+							
+														// Had to add this for the extended total
+							$extendedSingle = ($this->getOrder()->getCurrency()->formatTxt($item->getUnitPriceWithExtendedCosts()));
+							//$extendedTotal = $extendedSingle * 5;
+							
+							echo '<td><a href="'.$this->getUrl('Purchase/Products/Edit').'product_id/'.$item->getpop_product_id().'">'.$item->getsku().'</a></td>';
+							echo '<td><input size="40" type="text" id="pop_product_name_'.$item->getId().'" name="pop_product_name_'.$item->getId().'" value="'.$item->getpop_product_name().'"></td>';
+							echo '<td><input size="11" type="text" id="pop_supplier_ref_'.$item->getId().'" name="pop_supplier_ref_'.$item->getId().'" value="'.$item->getpop_supplier_ref().'"></td>';
+							echo '<td align="center"><input size="2" type="text" id="pop_qty_'.$item->getId().'" name="pop_qty_'.$item->getId().'" value="'.$item->getpop_qty().'"></td>';
+							echo '<td align="center">';
+							if ($item->getpop_supplied_qty() >= $item->getpop_qty())
+								echo $item->getpop_supplied_qty();
+							else 
+								echo '<font color="red">'.$item->getpop_supplied_qty().'</font>';
+							echo '</td>';
+							echo '<td align="center"><input size="6" type="text" id="pop_price_ht_'.$item->getId().'" name="pop_price_ht_'.$item->getId().'" value="'.$item->getpop_price_ht().'"><br></td>';
+							echo '<td align="center">';
+							$lastPrice = $this->GetLastPriceWithoutFees($item->getpop_product_id()); 
+							$lastPriceCurrency = $this->GetLastPriceWithoutFees($item->getpop_product_id()) * $this->getOrder()->getpo_currency_change_rate(); 
+							echo $this->getOrder()->getCurrency()->formatTxt($lastPriceCurrency);
+							echo '&nbsp;</td>';
+							echo '<td align="center"><input size="6" type="text" id="pop_tax_rate_'.$item->getId().'" name="pop_tax_rate_'.$item->getId().'" value="'.$item->getpop_tax_rate().'"></td>';
+							echo '<td align="center">'.$extendedSingle.'</td>';
+							echo '<td align="center">'.$this->getOrder()->getCurrency()->formatTxt($item->getRowTotal()).'</td>';
+							//echo '<td align="center">'.$extendedTotal.'</td>';
+							echo '<td align="center"><input type="checkbox" id="delete_'.$item->getId().'" name="delete_'.$item->getId().'" value="1"></td>';
+							
+							echo '</tr>';
+						}
+					?>
+				</tbody>
+			</table>
+		</div>
+</div>
+
+<div align="right">
+<table border="0">
+<tr>
+	<td><h3><?php echo $this->__('Subtotal: '); ?></h3></td>
+	<td width="100"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getTotalWithOutDuty()) ?></h3></td>
+</tr>
+<tr>
+	<td><h3><?php echo $this->__('Duties: '); ?></h3></td>
+	<td width="100"><h3><?php echo ($this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getTaxAmount())) ?></h3></td>
+</tr>
+<tr>
+	<td><h3><?php echo $this->__('Shipping: '); ?></h3></td>
+	<td width="100"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getShip()) ?></h3></td>
+</tr>
+<tr>
+	<td><h3><?php echo $this->__('Grand Total: '); ?></h3></td>
+	<td width="100"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getTotalTtc()) ?></h3></td>
+</tr>
+</table>
+</div>

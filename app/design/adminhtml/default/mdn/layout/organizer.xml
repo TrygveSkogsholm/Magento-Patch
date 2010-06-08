@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<layout>
+
+	<default>
+		<reference name="head">
+			<action method="addJs"><script>mdn/organizer.js</script></action>
+			<action method="addCss"><name>css/organizer.css</name></action>
+		</reference>
+		<reference name="content">
+            <block type="core/template" name="organizerbaseurl" before="-" template="Organizer/BaseUrl.phtml">
+            </block>		
+		</reference>
+	</default>
+
+    <organizer_task_list>
+		<reference name="head">
+			<action method="addJs"><script>mdn/organizer.js</script></action>
+		</reference>
+        <reference name="content">
+            <block type="Organizer/Task_Grid" name="organizergrid" template="Organizer/Task/List.phtml">
+            	<action method="setTitle"><title>All Tasks / Events</title></action>
+            </block>
+        </reference>
+    </organizer_task_list>
+            
+    <organizer_task_dashboard>
+		<reference name="head">
+			<action method="addJs"><script>mdn/organizer.js</script></action>
+		</reference>
+        <reference name="content">
+            <block type="Organizer/Dashboard" name="dashboard" template="Organizer/Dashboard.phtml">
+	            <block type="Organizer/Task_Grid" name="lategrid" template="Organizer/Task/List.phtml">
+	            	<action method="setTitle"><title>Late Tasks/Events</title></action>
+	            	<action method="setMode"><title>late</title></action>
+	            	<action method="setEnableAdd"><enableAdd>0</enableAdd></action>
+	            	<action method="setEnableSortFilter"><enableSortFilter>0</enableSortFilter></action>
+	            </block>
+	            <block type="Organizer/Task_Grid" name="notificationgrid" template="Organizer/Task/List.phtml">
+	            	<action method="setTitle"><title>Notifications</title></action>
+	            	<action method="setMode"><title>notification</title></action>
+	            	<action method="setEnableAdd"><enableAdd>0</enableAdd></action>
+	            	<action method="setEnableSortFilter"><enableSortFilter>0</enableSortFilter></action>
+	            </block>
+	            <block type="Organizer/Task_Grid" name="minegrid" template="Organizer/Task/List.phtml">
+	            	<action method="setTitle"><title>My Tasks</title></action>
+	            	<action method="setMode"><title>mine</title></action>
+	            </block>
+            </block>
+        </reference>
+    </organizer_task_dashboard>
+    
+</layout>

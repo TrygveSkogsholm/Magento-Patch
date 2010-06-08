@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    
+    <clientcomputer_admin_grid>
+        <reference name="content">
+            <block type="ClientComputer/Grid" name="clientcomputergrid" template="ClientComputer/Grid.phtml">
+           </block>
+        </reference>
+    </clientcomputer_admin_grid>
+
+    
+</layout>

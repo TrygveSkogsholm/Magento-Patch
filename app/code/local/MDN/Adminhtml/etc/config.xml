@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <MDN_Adminhtml>
+            <version>2.6</version>
+        </MDN_Adminhtml>
+    </modules>
+    
+    <global>
+    	<models>
+   	   	</models>
+		
+        <blocks>
+            <adminhtml>
+                <rewrite>
+                        <Sales_Order_Grid>MDN_Adminhtml_Block_Sales_Order_Grid</Sales_Order_Grid>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+	</global>
+        
+</config>

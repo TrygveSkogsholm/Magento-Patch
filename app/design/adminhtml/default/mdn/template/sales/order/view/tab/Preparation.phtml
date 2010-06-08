@@ -1,0 +1,108 @@
+<?php
+	//page permettant d'éditer une commande dans le cadre des orderpreparation
+	$Order = $this->GetOrder();
+?>
+
+<form name="form_preparation" id="form_preparation" method="POST" action="<?php echo $this->getUrl('OrderPreparation/OrderPreparation/SaveOrder')?>">
+<input name="form_key" type="hidden" value="<?php echo $this->getFormKey() ?>" />
+<input type="hidden" id="order_id"  name="order_id" value="<?php echo  $Order->getId(); ?>">
+
+<fieldset>
+		<?php
+			$OrderToPrepare = $this->getOrderToPrepare();
+			if ($OrderToPrepare == null)
+			{
+				echo "<p><font color='red'>".$this->__('This order doesnt belong to selected orders')."</font></p>";
+			}
+			else 
+			{			
+				//cree le menu deroulant pour les shipments
+				$ComboShipment = $this->getShipmentsAsCombo('shipment_id', $this->OrderToPrepare->getshipment_id());
+				
+				//cree le menu deroulant pour les shipments
+				$ComboInvoice = $this->getInvoicesAsCombo('invoice_id', $this->OrderToPrepare->getinvoice_id());
+				
+				//recupere le no de tracking
+				$tracking = "";
+				foreach($Order->getTracksCollection() as $track)
+		    	{
+		    		if (is_object($track->getNumberDetail()))
+			    		$tracking = $track->getNumberDetail()->gettracking();
+			    	else 
+			    	{
+			    		if (is_array($track->getNumberDetail()))
+			    			$tracking = ' ';
+			    	}
+		    	}
+			
+		?>
+		<table border="0">
+			<tr>
+				<td><?php echo $this->__('Shipment'); ?> : </td>
+				<td><?php echo $ComboShipment; ?></td>
+			</tr>
+			<tr>
+				<td><?php echo $this->__('Invoice'); ?> : </td>
+				<td><?php echo $ComboInvoice; ?></td>
+			</tr>			
+			<tr>
+				<td><?php echo $this->__('Tracking'); ?> : </td>
+				<td>
+					<?php if ($tracking == '') { ?>
+						<input type="text" id="tracking_num" name="tracking_num" style="width: 350px;">
+					<?php } else { ?>
+						<?php echo $tracking; ?>
+					<?php } ?>
+				</td>			
+			</tr>
+		</table>
+				<?php 
+			}
+		?>
+		
+		<?php if ($Order->IsCompletelyShipped()): ?>
+			<?php echo $this->__('Order completely shipped'); ?>		
+		<?php else: ?>
+			<?php echo $this->__('Order not completely shipped'); ?>				
+		<?php endif; ?>
+		
+</fieldset>
+
+<div class="a-right" style="margin-bottom: 10px;">
+                <button onclick="document.location.href='<?php echo $this->getPrintUrl(); ?>'" class="scalable" type="button"><span><?php echo $this->__('Print')?></span></button>
+                <button onclick="document.getElementById('form_preparation').submit()" class="scalable save" type="button"><span><?php echo $this->__('Save')?></span></button>
+</div>
+
+<div class="grid">
+	<table cellspacing="0" class="data" width="100%">
+		<thead>
+			<tr class="headings">
+				<th class="a-center"><?php echo $this->__('Name')?></th>
+				<th class="a-center"><?php echo $this->__('Comments')?></th>
+				<th class="a-center"><?php echo $this->__('Ordered Qty')?></th>
+				<th class="a-center"><?php echo $this->__('Shipped Qty')?></th>
+				<th class="a-center"><?php echo $this->__('Remains to ship')?></th>
+				<th class="a-center"><?php echo $this->__('Reserved Qty')?></th>
+				<th class="a-center"><?php echo $this->__('Action')?></th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php
+			$collection = $this->getOrder()->getItemsCollection();
+			foreach ($collection as $item):
+		?>
+			<tr>
+				<td><a href="<?php echo $this->getUrl('Purchase/Products/Edit', array('product_id' => $item->getproduct_id())); ?>"><?php echo $item->getname(); ?></a></td>
+				<td class="a-center"><textarea cols="80" rows="4" id="comments_<?php echo $item->getId(); ?>" name="comments_<?php echo $item->getId(); ?>"><?php echo $item->getcomments(); ?></textarea></td>
+				<td class="a-center"><?php echo (int)$item->getqty_ordered(); ?></td>
+				<td class="a-center"><?php echo (int)$item->getRealShippedQty(); ?></td>
+				<td class="a-center"><?php echo (int)$item->getRemainToShipQty(); ?></td>
+				<td class="a-center"><?php echo (int)$item->getreserved_qty(); ?></td>
+				<td class="a-center"><?php echo $this->getReservedColumnHtml($item); ?></td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+</div>
+
+</form>

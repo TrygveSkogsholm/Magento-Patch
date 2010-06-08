@@ -1,0 +1,459 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <MDN_Purchase>
+            <version>2.6</version>
+        </MDN_Purchase>
+    </modules>
+    
+    <global>
+    
+        <rewrite>
+            <!-- This is an identifier for your rewrite that should be unique -->
+            <!-- THIS IS THE CLASSNAME IN YOUR OWN CONTROLLER -->
+            <MDN_Purchase_Adminhtml_Sales_Order_Shipment>
+                <from><![CDATA[#^/admin/sales_order_shipment/save/#]]></from>
+                <to>/Purchase/Adminhtml_Sales_Order_Shipment/save/</to>
+            </MDN_Purchase_Adminhtml_Sales_Order_Shipment>
+        </rewrite>
+    
+    	<helpers>
+            <purchase>
+                <class>MDN_Purchase_Helper</class>
+            </purchase>
+        </helpers>
+		<blocks>
+            <Purchase>
+            	<class>MDN_Purchase_Block</class>
+           	</Purchase>
+           	<!-- Surcharge le bloc view order pour modifier l'url de cancel commande -->
+           	<adminhtml>
+           		<rewrite>
+           			<sales_order_grid>MDN_Purchase_Block_Adminhtml_Sales_Order_Grid</sales_order_grid>
+           			<sales_order_view>MDN_Purchase_Block_Adminhtml_Sales_Order_View</sales_order_view>
+           		</rewrite>
+           	</adminhtml>
+           	<catalog>
+           		<rewrite>
+           			<product_view_type_configurable>MDN_Purchase_Block_Catalog_Product_View_Type_Configurable</product_view_type_configurable>
+           		</rewrite>
+           	</catalog>
+		</blocks>
+    	<models>
+    	    <Purchase>
+                <class>MDN_Purchase_Model</class>
+                <resourceModel>Purchase_mysql4</resourceModel>
+            </Purchase>
+   	   	   	<catalog>
+	              <rewrite>
+	              		<product_type_simple>MDN_Purchase_Model_Catalog_Product_Type_Simple</product_type_simple>
+	              		<product>MDN_Purchase_Model_Catalog_Product</product>
+	              		<config>MDN_Purchase_Model_Catalog_Config</config>
+	              </rewrite>
+	   	   	</catalog>
+   	   		<sales>
+              <rewrite>
+                  <order>MDN_Purchase_Model_Sales_Order</order>
+                  <order_item>MDN_Purchase_Model_Sales_Order_Item</order_item>
+                  <order_shipment>MDN_Purchase_Model_Sales_Order_Shipment</order_shipment>
+                  <order_creditmemo>MDN_Purchase_Model_Sales_Order_Creditmemo</order_creditmemo>
+              </rewrite>
+       		</sales>
+       		<cataloginventory>
+       			<rewrite>
+       				<stock_item>MDN_Purchase_Model_CatalogInventory_Stock_Item</stock_item>
+       			</rewrite>
+            </cataloginventory>
+       		<Purchase_mysql4>
+                <class>MDN_Purchase_Model_Mysql4</class>
+                <!-- defini les tables utilisables -->
+                <entities>
+                    <Manufacturer>
+                        <table>purchase_manufacturer</table>
+                    </Manufacturer>
+                    <Supplier>
+                        <table>purchase_supplier</table>
+                    </Supplier>
+                    <ProductSupplier>
+                        <table>purchase_product_supplier</table>
+                    </ProductSupplier>
+                    <ProductManufacturer>
+                        <table>purchase_product_manufacturer</table>
+                    </ProductManufacturer>
+                    <Contact>
+                        <table>purchase_contact</table>
+                    </Contact>
+                    <ManufacturerSupplier>
+                    	<table>purchase_manufacturer_supplier</table>
+                    </ManufacturerSupplier>
+                    <Order>
+                        <table>purchase_order</table>
+                    </Order>
+                    <OrderProduct>
+                        <table>purchase_order_product</table>
+                    </OrderProduct>
+                    <stockmovement>
+                        <table>stock_movement</table>
+                    </stockmovement>
+                    <SupplyNeeds>
+                        <table>supply_needs</table>
+                    </SupplyNeeds>
+                    <TaxRates>
+                        <table>purchase_tva_rates</table>
+                    </TaxRates>
+                    <SalesOrderPlanning>
+                    	<table>purchase_sales_order_planning</table>
+                    </SalesOrderPlanning>
+                    <ShippingDelay>
+                    	<table>purchase_shipping_delay</table>
+                    </ShippingDelay>
+                    <CatalogProduct>
+                    	<table>catalog_product_entity</table>
+                    </CatalogProduct>
+                    <CatalogProductVarchar>
+                    	<table>catalog_product_entity_varchar</table>
+                    </CatalogProductVarchar>
+                </entities>
+            </Purchase_mysql4>
+            <core>
+            	<rewrite>
+            		<email_template>MDN_Purchase_Model_Core_Email_Template</email_template>
+            	</rewrite>
+            </core>
+    	</models>
+
+    	<resources>
+        	<Purchase_setup>
+				<setup>
+					<module>MDN_Purchase</module>
+					<class>Mage_Catalog_Model_Resource_Eav_Mysql4_Setup</class>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</Purchase_setup>
+            <Purchase_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </Purchase_write>
+            <Purchase_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </Purchase_read>
+        </resources>
+		<events>
+			<sales_order_place_after>
+                <observers>
+                    <Purchase>
+                        <type>singleton</type>
+                        <class>Purchase/observer</class>
+                        <method>sales_order_afterPlace</method>
+                    </Purchase>
+                </observers>
+            </sales_order_place_after>
+            <sales_order_invoice_pay>
+                <observers>
+                    <Purchase>
+                        <type>singleton</type>
+                        <class>Purchase/observer</class>
+                        <method>sales_order_invoice_pay</method>
+                    </Purchase>
+                </observers>
+            </sales_order_invoice_pay>
+            <purchase_update_supply_needs_for_product>
+                <observers>
+                    <Purchase>
+                        <type>singleton</type>
+                        <class>Purchase/observer</class>
+                        <method>purchase_update_supply_needs_for_product</method>
+                    </Purchase>
+                </observers>
+            </purchase_update_supply_needs_for_product>
+        </events>
+    </global>
+    
+    <adminhtml>
+		<acl>
+	        <resources>
+	            <admin>
+	                <children>
+                        <purchase module="purchase">
+							<title>Purchase</title>
+							<children>
+								<purchase_supply_needs module="purchase">
+									<title>Supply Needs</title>
+								</purchase_supply_needs>
+			 					<purchase_orders module="purchase">
+			                        <title>Orders</title>
+			                    </purchase_orders>
+			                    <purchase_products module="purchase">
+			                        <title>Products</title>
+			                    </purchase_products>
+			                    <purchase_manufacturer module="purchase">
+			                        <title>Manufacturers</title>
+			                    </purchase_manufacturer>
+			                    <purchase_supplier module="purchase">
+			                        <title>Suppliers</title>
+			                    </purchase_supplier>
+			                    <purchase_contact module="purchase">
+			                        <title>Contacts</title>
+			                    </purchase_contact>
+			                    <purchase_tax_rates module="purchase">
+			                        <title>Tax Rates</title>
+			                    </purchase_tax_rates>
+			                    <purchase_shipping_delay module="purchase">
+			                        <title>Shipping Delay</title>
+			                    </purchase_shipping_delay>
+			                    <product_availability_label module="purchase">
+			                        <title>Product availability label</title>
+			                    </product_availability_label>
+			                    <purchase_tools module="purchase">
+			                    	<title>Tools</title>
+			                    	<children>
+					                    <mass_stock_editor module="purchase">
+					                        <title>Mass Stock Editor</title>
+					                    </mass_stock_editor>  
+					                    <stock_movement_grid module="purchase">
+					                        <title>Add Stock Movement</title>
+					                    </stock_movement_grid>  
+			                    	</children>
+			                    </purchase_tools>
+							</children>
+                        </purchase>
+	                    <system>
+	                        <children>
+	                            <config>
+	                                <children>
+	                                    <purchase module="purchase">
+											<title>Purchase</title>
+	                                    </purchase>
+	                                    <planning module="purchase">
+											<title>Planning</title>
+	                                    </planning>
+	                                </children>
+	                            </config>
+	                        </children>
+	                    </system>
+	                    <sales translate="title" module="sales">
+                            <title>Sales</title>
+                            <children>
+                                <order translate="title">
+                                    <title>Orders</title>
+                                    <children>
+                                        <actions translate="title">
+                                            <title>Actions</title>
+                                            <children>
+                                                <margins translate="title"><title>View margins</title></margins>
+                                            </children>
+                                       	</actions>
+                                    </children>
+                                 </order>
+                             </children>
+                        </sales>
+	                </children>
+	            </admin>
+	         </resources>
+	    </acl>
+        <translate>
+            <modules>
+                <Mage_Adminhtml>
+                    <files>
+                        <default>MDN_Purchase.csv</default>
+                    </files>
+                </Mage_Adminhtml>
+            </modules>
+        </translate>
+        <menu>
+            <purchase translate="title" module="purchase">
+                <title>Purchase</title>
+                <children>
+                    <purchase_supply_needs translate="title" module="purchase">
+                        <title>Supply Needs</title>
+                        <action>Purchase/SupplyNeeds/Grid</action>
+                    </purchase_supply_needs>
+                    <purchase_orders translate="title" module="purchase">
+                        <title>Orders</title>
+                        <action>Purchase/Orders/List</action>
+                    </purchase_orders>
+                    <purchase_products translate="title" module="purchase">
+                        <title>Products</title>
+                        <action>Purchase/Products/List</action>
+                    </purchase_products>
+                    <purchase_manufacturer translate="title" module="purchase">
+                        <title>Manufacturers</title>
+                        <action>Purchase/Manufacturers/List</action>
+                    </purchase_manufacturer>
+                    <purchase_supplier translate="title" module="purchase">
+                        <title>Suppliers</title>
+                        <action>Purchase/Suppliers/List</action>
+                    </purchase_supplier>
+                    <purchase_contact translate="title" module="purchase">
+                        <title>Contacts</title>
+                        <action>Purchase/Contacts/List</action>
+                    </purchase_contact>                
+                    <purchase_tax_rates translate="title" module="purchase">
+                        <title>Tax Rates</title>
+                        <action>Purchase/Tax/List</action>
+                    </purchase_tax_rates>
+                    <purchase_shipping_delay translate="title" module="purchase">
+                        <title>Shipping Delay</title>
+                        <action>Purchase/ShippingDelay/List</action>
+                    </purchase_shipping_delay>
+                    <product_availability_label translate="title" module="purchase">
+                        <title>Product Availability Ranges</title>
+                        <action>Purchase/ProductAvailability/List</action>
+                    </product_availability_label>
+                    <purchase_tools translate="title" module="purchase">
+                        <title>Tools</title>
+                        <children>
+		                    <mass_stock_editor translate="title" module="purchase">
+		                        <title>Mass Stock Editor</title>
+		                        <action>Purchase/Tools/MassStockEditor</action>
+		                    </mass_stock_editor>        
+		                    <stock_movement_list translate="title" module="purchase">
+					             <title>All Stock Movement</title>
+					             <action>Purchase/StockMovement/List</action>
+					        </stock_movement_list>  
+		                    <test translate="title" module="purchase">
+					             <title>Test</title>
+					             <action>Purchase/Test/showShipment/shipment_id/1473</action>
+					        </test>  
+                        </children>
+                    </purchase_tools>                    
+                </children>
+                <sort_order>90</sort_order>
+            </purchase>
+        </menu>
+
+        <routers>
+            <Purchase>
+                <use>standard</use>
+                <args>
+                    <module>MDN_Purchase</module>
+                    <frontName>Purchase</frontName>
+                </args>
+            </Purchase>
+        </routers>
+        
+        <layout>
+            <updates>
+                <purchase>
+                    <file>purchase.xml</file>
+                </purchase>
+            </updates>
+        </layout>
+
+    </adminhtml>
+    
+    <frontend>
+        <routers>
+            <Purchase>
+                <use>standard</use>
+                <args>
+                    <module>MDN_Purchase</module>
+                    <frontName>Purchase</frontName>
+                </args>
+            </Purchase>
+        </routers>
+        
+        <layout>
+            <updates>
+                <purchase>
+                    <file>purchase.xml</file>
+                </purchase>
+            </updates>
+        </layout>
+
+        <translate>
+            <modules>
+                <MDN_Purchase>
+                    <files>
+                        <default>MDN_Purchase.csv</default>
+                    </files>
+                </MDN_Purchase>
+            </modules>
+        </translate>
+        
+	</frontend>
+    
+     <crontab>
+        <jobs>
+        	<!-- Cron pour la mise a jour des qtes commandees -->
+            <update_stocks>
+                <schedule><cron_expr>* */1 * * *</cron_expr></schedule>
+                <run><model>Purchase/observer::UpdateStocksForOrders</model></run>
+            </update_stocks>
+        </jobs>
+    </crontab>
+
+    <default>
+    	<purchase>
+	    	<configuration>
+	    		<order_payment_method>Carte bancaire,Cheque,Encours,Cash On Delivery,Virement Bancaire</order_payment_method>
+	    		<order_carrier>Calberson,Chronopost,Colissimo,Cooljet,DHL,FEDEX,TAT Express,TNT,UPS,Enlevement</order_carrier>
+	    		<check_qty_before_create_shipment>1</check_qty_before_create_shipment>
+	    	</configuration>
+	    	<general>
+	    		<products_default_tax_rate>3</products_default_tax_rate>
+	    		<cost_repartition_method>by_qty</cost_repartition_method>
+	    	</general>
+	    	<supplyneeds>
+	    		<managed_order_status>closed,holded,new,pending_payment,processing,pending</managed_order_status>
+	    	</supplyneeds>
+	    	<purchase_order>
+	    		<default_shipping_duties_taxrate>0</default_shipping_duties_taxrate>
+	    		<default_currency>EUR</default_currency>
+	    		<store_product_cost>1</store_product_cost>
+	    	</purchase_order>
+	    	<purchase_product>
+	    		<pricer_default_tax_rate>19.6</pricer_default_tax_rate>
+	    	</purchase_product>
+	    </purchase>
+	    <planning>
+	    	<consider>
+	    		<consider_order_when_placed>1</consider_order_when_placed>
+	    		<consider_order_when_invoiced>0</consider_order_when_invoiced>
+	    		<consider_order_on_paypment_validated>0</consider_order_on_paypment_validated>
+	    		<include_holy_days>0</include_holy_days>
+	    		<consider_order_tomorow_if_placed_after>24</consider_order_tomorow_if_placed_after>
+	    	</consider>
+	    	<fullstock>
+	    		<avoid_holy_days>1</avoid_holy_days>
+	    		<maxdate_calculation_mode>days</maxdate_calculation_mode>
+	    		<maxdate_calculation_value>0</maxdate_calculation_value>
+	    	</fullstock>
+	    	<shipping>
+	    		<order_preparation_duration>0</order_preparation_duration>
+	    		<maxdate_calculation_mode>days</maxdate_calculation_mode>
+	    		<maxdate_calculation_value>0</maxdate_calculation_value>
+	    		<avoid_holy_days>1</avoid_holy_days>
+	    	</shipping>
+	    	<delivery>
+	    		<maxdate_calculation_mode>days</maxdate_calculation_mode>
+	    		<maxdate_calculation_value>0</maxdate_calculation_value>
+	    		<avoid_holy_days>1</avoid_holy_days>
+	    		<default_shipping_delay>3</default_shipping_delay>
+	    	</delivery>
+	    	<quote_options>
+	    		<delayed_payment_delay>5</delayed_payment_delay>
+	    		<show_planning_in_cart>0</show_planning_in_cart>
+	    		<show_planning_in_sales_history>0</show_planning_in_sales_history>
+	    	</quote_options>
+	    </planning>
+    </default>
+    
+    <admin>
+    	<routers>
+            <Purchase>
+                <use>admin</use>
+                <args>
+                    <module>MDN_Purchase</module>
+                    <frontName>Purchase</frontName>
+                </args>
+            </Purchase>
+        </routers>
+    </admin>
+        
+</config>

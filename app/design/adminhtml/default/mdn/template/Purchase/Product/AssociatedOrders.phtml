@@ -1,0 +1,44 @@
+<div class="grid">
+	<table cellspacing="0" class="data" cellspacing="0">
+		<thead>
+			<tr class="headings">
+				<th class="a-center"><?php echo $this->__('Order')?></th>
+				<th class="a-center">Date</th>
+				<th><?php echo $this->__('Supplier')?></th>
+				<th class="a-center"><?php echo $this->__('Qty')?></th>
+				<th class="a-center"><?php echo $this->__('Delivered Qty')?></th>
+				<th class="a-center"><?php echo $this->__('Unit Price')?></th>
+				<th class="a-center"><?php echo $this->__('Unit Price + Cost')?></th>
+				<th class="a-center"><?php echo $this->__('Status')?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+				//Affiche la liste
+				$collection = $this->getAssociatedOrders();
+				foreach ($collection as $item)
+				{
+					echo '<tr>';
+					echo '<td align="center"><a href="'.$this->getUrl('Purchase/Orders/Edit').'po_num/'.$item->getpo_num().'">'.$item->getpo_order_id().'</a></td>';
+					echo '<td align="center">'.$item->getpo_date().'</td>';
+					echo '<td><a href="'.$this->getUrl('Purchase/Suppliers/Edit').'sup_id/'.$item->getpo_sup_num().'">'.$item->getsup_name().'</a></td>';
+					echo '<td align="center">'.$item->getpop_qty().'</td>';
+					echo '<td align="center">'.$item->getpop_supplied_qty().'</td>';
+					echo '<td align="center">'.$item->getEuroCurrency()->formatTxt($item->getpop_price_ht_base()).'</td>';
+					echo '<td align="center">'.$item->getEuroCurrency()->formatTxt($item->getUnitPriceWithExtendedCosts_base()).'</td>';
+					//definit le status
+					$status = '';
+					if ($item->getpo_sent() == 1)
+						$status .= '<img src="'.$this->getSkinUrl('images/fam_page_white_edit.gif').'" alt="Sent to supplier">&nbsp;';
+					if ($item->getpo_paid() == 1)
+						$status .= '<img src="'.$this->getSkinUrl('images/fam_money.gif').'" alt="Paid">&nbsp;';
+					if ($item->getpo_finished() == 1)
+						$status .= '<img src="'.$this->getSkinUrl('images/fam_bullet_success.gif').'" alt="Finished">&nbsp;';
+					echo '<td align="center">'.$status.'&nbsp;</td>';
+					echo '</tr>';
+				}
+				
+			?>
+		<tbody>
+	</table>
+</div>

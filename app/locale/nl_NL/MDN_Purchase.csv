@@ -1,0 +1,242 @@
+Purchase,Bestellen
+Supply Needs,Leverancier bestelling lijst
+Supplier,Leverancier
+Manufacturer,Fabrikant
+Status,Status
+Refresh,Herladen
+Reset,Reset
+Create,Maken
+Needed Qty,Benodigde aantal
+Suppliers,Leveranciers
+Create Order and Add Selected Products,Maak een bestelling en selecteer producten
+Current stock,Actuele voorraad
+Stock Mini,Minimale voorraad
+Ordered Qty,Bestelde aantal
+Needed Qty,Benodigde aantal
+Already Ordered Qty,Al bestelde aantal
+Orders,Bestellingen
+Products,Producten
+Manufacturers,Fabrikanten
+Contacts,Contacts
+Delivery Date,Leveringsdatum
+Sent,Verstuur
+Payment Date,Betalingsdatum
+Finished,Voltooid
+Orders List,Bestelling lijst
+Payment Type,Betaal methode
+Currency,Valuta
+Currency Change Rate,Valuta wisselkoers
+Shipping Cost,Verzendkosten
+Zoll Cost,Tol koste
+Invoice Ref,Factuur nr.
+Deliveries,Leveringen
+Qty,Aantal
+Create New Delivery,Levering aanmaken
+Supplier Ref,Leverancier nr.
+Delivered Qty,Geleverde items
+Price HT,Prijs Ex. BTW
+Last Price HT,Laatste prijs Ex. BTW
+Unit Price + Costs,Product prijs + kosten
+Delete,Verwijderen
+Import From Supply Needs,Importeren
+Please fill delivery date field,Geef a.u.b. de ontvangstdatum op
+Buy Price,Inkoopprijs
+Sell Price,Verkoopprijs
+Margin %,Marge %
+Products List,Producten lijst
+Qty Needed,Benodigde aantal
+Edit Product,Product aanpassen
+Stock Summary,Voorraad aanduiding
+Pricer,Prijs
+Update Stock,Voorraad updaten
+Compute Buy Price,Bereken koop price
+Associated Manufacturers,Gekoppelde Fabrikanten
+Associated Suppliers,Gekoppelde Leveranciers
+Supply Orders,Bestellingen bij leveranciers
+Stock Movements,Mouvements de Stock
+Waiting For Delivery Qty,Aantal wachtend op levering
+Sell Price HT,Verkoopprijs Ex. BTW
+Sell Price TTC,Verkoopprijs Inc. BTW
+Edit,Aanpassen
+Last Price,Laatste prijs
+Name,Naam
+Add Supplier,Leverancier toevoegen
+Supplier Reference,Leverancier Omschrijving
+Price Position,Prijs positie
+Save,Opslaan
+Add,Toevoegen
+Add Manufacturer,Fabrikant Toevoegen
+Manufacturer Reference,Fabrikant Omschrijving
+Unit Price + Cost,Itemprijs + kosten
+Manufacturers List,Fabrikanten lijst
+Phone,Telefoon
+Edit Manufacturer,Fabrikant aanpassen
+City,Stad
+Country,Land
+Main Contact,Contactpersoon
+Address 1,Adres 1
+Address 2,Adres 2
+Zip Code,Postcode
+Website,Website
+Magento Manufacturer,Magento Fabrikant
+Function,Functie
+Edit Contact,Contact info aanpassen
+Entity,Entity
+Supplier List,Leverancieren lijst
+Edit Supplier,Leverancier aanpassen
+Account Information,Account informatie
+After Sale Information,After Sale Informatie
+Purchase Information,Bestellingsinformatie
+Associated Orders,Gerelateerde bestellingen
+Account Login,Inloggen
+Account Password,Wachtwoord
+Sale Online,Sale Online
+Order Mini,Minimale voorraad
+Supply Delay,Leverancier vertraging
+Supply Delay Max,Max. Leverancier vertraging
+Range,Gebied
+Price,Prijs
+Edit Order,Bestelling aanpassen
+Margin,Marge
+Order Preparation,Bestelling voorbereiden
+Full stock Orders,Bestellingen op voorraad
+Stockless Orders,Niet voorradig bestellingen
+Selected Orders,Geselecteerde bestellingen
+Remain to Ship,Nog te verzenden
+Content to Ship,Te verzenden
+Remove,Verwijderen
+View,Bekijken
+Shipment,Verzending
+Payment,Betaal methode
+Weight,Gewicht
+Ship Mode,Verzend methode
+Import Tracking Numbers,Importeerd Tracking nummer
+Create Shipments & Invoices,Creer Verzend- en factuurbonnen
+Print Documents,Bonnen Printen
+Notifiy Customers,Klant informeren
+Finish,Voltooien
+Export to ,Exporteren naar
+File,Bestand
+Import,Importeren
+This will automatically create shipments and invoices for selected orders.\nAre you sure ?,Hierdoor zullen er automatisch verzend- en factuurbonnen gemaakt worden.\nWeet je het zeker?
+Order ,Order
+Reserved Qty,Gereserveerd aantal
+Stock Insufficient,Voorraad ontoereikend
+This order doesnt belong to selected orders,Deze bestelling behoort niet tot de geselecteerde bestellingen
+Back,Terug
+Add to Selection,Toevoegen aan selectie
+Order successfully added.,Bestelling succesvol toegevoegd
+Orders successfully removed.,Bestelling succesvol verwijderd
+Commit successfull,Opgave succesvol uitgevoerd
+File successfully imported: ,Bestand succesvol geimporteerd:
+Customers successfully notified.,Klanten zijn succesvol geinformeerd
+Changes successfully saved,Veranderingen succesvol opgeslagen
+Order successfully Created,Bestelling succesvol aangemaakt
+Order successfully Deleted,Bestelling succesvol verwijderd
+Order successfully Saved,Bestelling succesvol opgeslagen
+Products delivery date successfully Updated,Verwachten leverdatum succesvol aangepast
+Product successfully Saved,Product succesvol opgeslagen
+Product costs successfully computed,Product succesvol berekend
+Product stocks successfully updated,Product voorraad succesvol aangepast
+An error occured while uploading file.,Er is een fout opgetreden tijdens het uploaden van een bestand
+An error occured while saving changes: ,Er is een fout opgetreden:
+Unable to add order,Niet mogelijk bestelling toe te voegen
+Unable to add Tracking Number to Shipment #,Niet mogelijk Tracking nummer toe te voegen #
+Unable to add Order ,Niet mogelijk bestelling toe te voegen
+Stock insufficient,Voorraad ontoereikend
+Delivery date incorrect,Aankomstdatum incorect
+Purchase Module,Koop module
+PDF Header Text,PDF Kop tekst
+PDF Footer Text,PDF Voet tekst
+PDF Comment,PDF Commentaar
+Cost Repartition Method,Cost Repartition Method
+By Product Qty,Op product aantal
+By Product amount,Op product prijs
+Next Supply Date,Volgende leveringsdatum leverancier
+Default Supply Delay,Standaard Leverancier vertraging
+days,Dagen
+Update Products delivery date,Product leveringsdatum aanpassen
+Estimated shipping date,Verwachte verzenddatum
+Payment<br>Validation,Betaalmethode<br>Valideren
+Product<br>Supply,Product<br>Leverancier
+Assembly /<br>Preparation,Inpakken /<br>Verwerken
+Shiping,Verzending
+(Those information can change due to facts beyond our control),(Deze informatie kan veranderen zonder een aanpassing door uzelf)
+Delivery<br>planed to,Verzending<br>Geplaned op
+Print,Printen
+Data successfully saved,Informatie succesvol opgeslagen
+List refreshed,Lijst vernieuwd
+Commit successfull,Commit succesvol
+Please wait,Een ogenblik geduld
+Processing order,Bestelling verwerken
+New,Nieuw
+Supply for orders,Leverancier van bestellingen
+Supply for mini qty,Leverancier van minimale aantal
+Payment validated,Betaling gecontroleerd
+Yes,Ja
+No,Nee
+Validate payment,Betaling controleren
+Cancel payment,Betaling annuleren
+Payments validated,betaling mislukt
+Payments canceled,Betaling geannuleerd
+Are you sure ?,Weet je het zeker?
+donation,Donatie
+order,Bestelling
+supply,Leverancier
+rma,RMA
+loan,Lening
+Customer Return,Retour door klant
+lost/broken,Verloren/Beschadigd
+Purchase Order Carriers,Purchase Order Carriers
+Purchase Order Payment Method,Purchase Order Payment Method
+Separated with coma,Gescheiden door komma's
+Carriers class,Carriers class
+Reserved to developper,Gereserveerd voor ontwikkelaar
+Order Management Delay (Days),Bestelling vertraging (dagen)
+Add,Toevoegen
+Products successfully Added,Product succesvol toegevoegd
+Error adding Product,Fout tijdens toevoegen product
+Apply Filter,Filter gebruiken
+Refresh cache,Cashe herladen
+Cache refreshed,Cache is herladen
+supply_order,supply_order
+supply_min_qty,supply_min_qty
+Carrier code,Transporteur code
+Tnt Account,TNT Account
+Company Name,Bedrijfsnaam
+Address 1,Adres 1
+Address 2,Adres 2
+Zip Code,Postcode
+City,Stad
+Country,Land
+Customers successfully notified.,Klant is succesvol geinformeerd
+Supplier Order Ref,Leverancier leveringnr.
+Some products buy price are not set,Enkele producten hebben nog geen inkoopprijs
+Supply Order,Leverancier bestelling
+Shipping costs,Verzendkosten
+Zoll costs,Tol kosten
+Comments,Commentaar
+Billing Method : ,Factuur gegevens : 
+Carrier : ,Transporteur : 
+Comments : ,Commentaar : 
+WEEE,Ecotax
+Unit Price,Product prijs
+Qty,Aantal
+Orders successfully added,Bestelling succesvol toegevoegd
+No order to add,Geen bestelling om toe te voegen
+Order successfully removed.,Bestelling succesvol verwijderd
+Add Stock Movement,Voorraad verplaatsing toevoegen
+Stock movement created,Voorraad verplaatsing toegevoegd
+Stock movement deleted,Voorraad verplaatsing verwijderd
+Export to Carrier Software,Exporteer naar 3th party software
+Unable to add Tracking Number to Shipment #,Het was niet mogelijk om een Tracking nummer toe te voegen bij verzending #
+Customers successfully notified.,Klant succesvol geinformeerd
+Exclude from Supply Needs,Niet weergeven bij Leverancier benodigheden lijst
+help_order_sent,help_order_sent
+help_order_finished,help_order_finished
+Product already exists in order,Product bestaat al in de bestelling
+Purchase Order #,Bestelling nummer #
+ from ,Van
+Order #,Nummer #
+Supplier Saved,Leverancier opgeslagen
+Please select at least one product,Selecteer minimaal 1 product

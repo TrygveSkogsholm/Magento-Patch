@@ -1,0 +1,30 @@
+<script>
+function sendToSupplier()
+{
+	document.getElementById('send_to_customer').value = '1';
+	editForm.submit();
+}
+</script>
+
+<div class="entry-edit">
+    
+	    <div class="entry-edit-head"> 
+		    <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Send order to supplier'); ?></h4> 
+	    </div>
+        <fieldset id="my-fieldset">
+			<?php echo $this->__('Fill comments and click button to send order to supplier by email'); ?>
+			<br><?php echo $this->__('Supplier email address').' : '.$this->getOrder()->getSupplier()->getsup_mail(); ?>
+			<?php if ($this->getOrder()->getpo_supplier_notification_date() != ''): ?>
+				<br><?php echo $this->__('Supplier notified on').' : '.$this->formatDate($this->getOrder()->getpo_supplier_notification_date(), 'medium', true); ?>
+			<?php endif; ?>
+			<p>&nbsp;</p>
+			<center>
+				<textarea id="email_comment" name="email_comment" cols="100" rows="15"></textarea>   
+				<p><input checked type="checkbox" value="1" id="ch_change_order_status_to_pending" name="ch_change_order_status_to_pending"> <?php echo $this->__('Set order status to pending for delivery after sending email'); ?></p>
+				<input type="hidden" id="send_to_customer" name="send_to_customer" value="">    
+				<p>&nbsp;</p>
+				<button type="button" class="scalable " onclick="sendToSupplier();" style=""><span><?php echo $this->__('Send to supplier'); ?></span></button>
+			</center>
+        </fieldset>
+</div>
+

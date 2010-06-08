@@ -1,0 +1,62 @@
+<script>
+
+//****************************************************************************************************************************
+//Ajoute les produits a la commande
+function addProducts()
+{
+	//copy ids in parent window, in dedicated hidden field
+	var selectedId = SupplyNeedsGrid_massactionJsObject.checkedString;
+	window.opener.document.getElementById('supply_needs_ids').value = selectedId;
+	
+	//submit parent form
+	window.opener.document.getElementById('edit_form').submit();
+		        				
+	//close window
+	self.close();
+
+
+}
+
+</script>
+
+<style>
+.lien-popup span
+{								   
+    position       :  absolute;
+    top            :  -2000em;
+    left           :  -2000em;
+    width          :  1px;
+    height         :  1px;
+    overflow       :  hidden; 
+    background     :  #ffffe1;   /* Définition du fond, sinon on a le même que notre lien */
+    border         :  1px solid #000000; /* Définition des bordures */
+    text-decoration: none;
+    color: black;
+    text-align: left;
+}  
+
+
+.lien-popup:hover span
+{								   
+	top        :  auto;
+    left       :  auto;
+    width      :  300px;
+    height     :  auto;
+    overflow   :  visible;
+}  
+
+</style>
+
+<div class="entry-edit">
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Import from Supply Needs')?></h3></td>
+        </tr>
+    </table>
+</div>
+
+<?php echo $this->getGridParentHtml() ?>
+
+</div>

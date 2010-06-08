@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<!-- ce fichier doit se trouver dans adminhtml/default/default sinon pas pris en compte.. -->
+<layout version="0.1.0">
+        
+    <purchase_manufacturers_list>
+    	<reference name="content">
+    		<block type="Purchase/Manufacturer_Grid" name="manufacturerlist" template="Purchase/Manufacturer/Grid.phtml" />
+    	</reference>
+    </purchase_manufacturers_list>
+
+    <purchase_manufacturers_new>
+    	<reference name="content">
+    		<block type="Purchase/Manufacturer_New" name="manufacturernew" template="Purchase/Manufacturer/New.phtml" />
+    	</reference>
+    </purchase_manufacturers_new>
+
+    <purchase_manufacturers_edit>
+    	<reference name="content">
+    		<block type="Purchase/Manufacturer_Edit" name="manufactureredit" template="Purchase/Manufacturer/Edit.phtml">
+    		    <block type="Purchase/Contact_SubGrid" name="contacts" as="contacts" template="Purchase/Contact/SubGrid.phtml">
+           		</block>
+    		</block>
+    	</reference>
+    </purchase_manufacturers_edit>
+
+    
+    <purchase_suppliers_list>
+    	<reference name="content">
+    		<block type="Purchase/Supplier_Grid" name="supplierlist" template="Purchase/Supplier/Grid.phtml" />
+    	</reference>
+    </purchase_suppliers_list>
+
+    <purchase_suppliers_new>
+    	<reference name="content">
+    		<block type="Purchase/Supplier_New" name="suppliernew" template="Purchase/Supplier/New.phtml" />
+    	</reference>
+    </purchase_suppliers_new>
+
+    <purchase_suppliers_edit>
+    	<reference name="left">
+    		<block type="Purchase/Supplier_Edit_Tabs" name="suppliertabs">
+    		</block>
+    	</reference>
+        <reference name="content">
+            <block type="Purchase/Supplier_Edit" name="supplier_edit"></block>
+        </reference>
+    </purchase_suppliers_edit>
+        
+    
+    <purchase_products_list>
+    	<reference name="content">
+    		<block type="Purchase/Product_Grid" name="productlist" template="Purchase/Product/Grid.phtml" />
+    	</reference>
+    </purchase_products_list>
+    <purchase_products_edit>
+    	<reference name="left">
+    		<block type="Purchase/Product_Edit_Tabs" name="producttabs">
+    		</block>
+    	</reference>
+        <reference name="content">
+            <block type="Purchase/Product_Edit" name="product_edit"></block>
+        </reference>
+    </purchase_products_edit>
+
+            
+    <purchase_contacts_list>
+    	<reference name="content">
+    		<block type="Purchase/Contact_Grid" name="contactlist" template="Purchase/Contact/Grid.phtml" />
+    	</reference>
+    </purchase_contacts_list>
+    <purchase_contacts_edit>
+    	<reference name="content">
+    		<block type="Purchase/Contact_Edit" name="contactedit" template="Purchase/Contact/Edit.phtml" />
+    	</reference>
+    </purchase_contacts_edit>
+
+            
+    <purchase_orders_list>
+    	<reference name="content">
+    		<block type="Purchase/Order_Grid" name="orderlist" template="Purchase/Order/Grid.phtml" />
+    	</reference>
+    </purchase_orders_list>
+    <purchase_orders_new>
+    	<reference name="content">
+    		<block type="Purchase/Order_New" name="neworder" template="Purchase/Order/New.phtml" />
+    	</reference>
+    </purchase_orders_new>
+    <purchase_orders_edit>
+    	<reference name="left">
+    		<block type="Purchase/Order_Edit_Tabs" name="ordertabs">
+    		</block>
+    	</reference>
+        <reference name="content">
+            <block type="Purchase/Order_Edit" name="order_edit"></block>
+        </reference>
+    </purchase_orders_edit>
+    <purchase_orders_importfromsupplyneeds>
+        <reference name="root">
+            <action method="setTemplate"><template>page/popup.phtml</template></action>
+        </reference>
+    	<reference name="content">
+    		<block type="Purchase/SupplyNeeds_Grid" name="importfromsupplyneeds" template="Purchase/Order/ImportFromSupplyNeeds.phtml" />
+    	</reference>
+    </purchase_orders_importfromsupplyneeds>
+    
+    <purchase_supplyneeds_list>
+    	<reference name="content">
+    		<block type="Purchase/SupplyNeeds_List" name="supplyneedslist" template="Purchase/SupplyNeeds/List.phtml" />
+    	</reference>
+    </purchase_supplyneeds_list>
+    <purchase_supplyneeds_grid>
+    	<reference name="content">
+    		<block type="Purchase/SupplyNeeds_Grid" name="supplyneedsgrid" template="Purchase/SupplyNeeds/Grid.phtml" />
+    	</reference>
+    </purchase_supplyneeds_grid>
+        
+    <purchase_tax_list>
+    	<reference name="content">
+    		<block type="Purchase/Tax_List" name="taxlist" template="Purchase/Tax/Grid.phtml" />
+    	</reference>
+    </purchase_tax_list>
+    <purchase_tax_edit>
+    	<reference name="content">
+    		<block type="Purchase/Tax_Edit" name="taxedit" template="Purchase/Tax/Edit.phtml" />
+    	</reference>
+    </purchase_tax_edit>
+    <purchase_tax_new>
+    	<reference name="content">
+    		<block type="Purchase/Tax_New" name="taxnew" template="Purchase/Tax/New.phtml" />
+    	</reference>
+    </purchase_tax_new>
+
+    <purchase_misc_identifyerrors>
+    	<reference name="content">
+    		<block type="Purchase/Misc_Errors" name="errors" template="Purchase/Misc/Errors.phtml" />
+    	</reference>
+    </purchase_misc_identifyerrors>
+
+    
+	<adminhtml_sales_order_view>
+        <reference name="sales_order_tabs">
+            <action method="addTab"><name>order_planning</name><block>Purchase/Adminhtml_Sales_Order_View_Tab_Planning</block></action>
+            <action method="addTab"><name>sales_order_margins</name><block>Purchase/Adminhtml_Sales_Order_View_Tab_Margins</block></action>
+        </reference>
+    </adminhtml_sales_order_view>
+    
+    <purchase_shippingdelay_list>
+    	<reference name="content">
+    		<block type="Purchase/ShippingDelay_List" name="sp" template="Purchase/ShippingDelay/List.phtml" />
+    	</reference>    
+    </purchase_shippingdelay_list>
+
+    <purchase_productavailability_list>
+    	<reference name="content">
+    		<block type="Purchase/ProductAvailability_List" name="pa" template="Purchase/ProductAvailability/List.phtml" />
+    	</reference>    
+    </purchase_productavailability_list>
+
+    <purchase_tools_massstockeditor>
+    	<reference name="content">
+    		<block type="Purchase/Tools_MassStockEditor" name="pa" template="Purchase/Tools/MassStockEditor.phtml" />
+    	</reference>    
+    </purchase_tools_massstockeditor>
+
+    <purchase_stockmovement_list>
+    	<reference name="content">
+    		<block type="Purchase/StockMovement_Grid" name="stockmovementlist" template="Purchase/StockMovement/Grid.phtml" />
+    	</reference>
+    </purchase_stockmovement_list>
+    
+</layout>

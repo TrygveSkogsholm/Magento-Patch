@@ -1,0 +1,150 @@
+<script>
+
+//***********************************************************************************************************************
+//set delivered qty to max and submit form
+function AllProductDelivered()
+{
+		<?php
+			$collection = $this->getOrder()->getProducts();
+			foreach ($collection as $item)
+			{
+				if ($item->getpop_qty() > $item->getpop_supplied_qty())
+				{
+					$remaining_qty = ($item->getpop_qty() - $item->getpop_supplied_qty());
+					echo "document.getElementById('add_sm_qty_".$item->getpop_product_id()."').value = ".$remaining_qty.";";
+				}
+			}
+		?>
+}
+
+</script>
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Deliveries')?></h3></td>
+            <td align="right">
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="entry-edit">
+        <div class="grid">
+            <table cellspacing="0" class="data" width="100%">
+	        	<thead>
+					<tr class="headings">
+		            	<th class="a-center">Date</th>
+		            	<th><?php echo $this->__('Product'); ?></th>
+		            	<th class="a-center"><?php echo $this->__('Qty'); ?></th>
+		            	<th>Description</th>
+		            </tr>
+		         </thead>
+		         <tbody>
+					<?php
+						//Affiche les mouvements de stock
+						$collection = $this->getOrder()->getStockMovements();
+						foreach ($collection as $item)
+						{
+							$product = mage::getModel('catalog/product')->load($item->getsm_product_id());
+							echo '<tr>';
+							echo '<td class="a-center">'.$item->getsm_date().'</td>';
+							echo '<td>'.$product->getname().'</td>';
+							echo '<td class="a-center">'.$item->getsm_qty().'</td>';
+							echo '<td>'.$item->getsm_description().'</td>';
+							echo '</tr>';
+						}
+					
+					?>
+				</tbody>
+			</table>
+		</div>
+</div>
+
+<p>&nbsp;</p>
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Create New Delivery')?></h3></td>
+            <td align="right">
+                <button onclick="AllProductDelivered();" class="scalable" type="button"><span><?php echo $this->__('All products delivered')?></span></button>           	
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="entry-edit">
+        <fieldset id="my-fieldset">
+			<table border="0">
+				<tr>
+					<td>Date</td>
+					<td width="30">&nbsp;</td>
+					<td>
+					<input type="text" id="add_sm_date" name="add_sm_date" value="<?php echo date('Y-m-d'); ?>">
+                	<img src="<?php echo $this->getSkinUrl('images/purchase/grid-cal.gif') ?>" class="v-middle" id="img_calendar_sm" />
+			        <script type="text/javascript">
+		                Calendar.setup({
+		                    inputField : 'add_sm_date',
+		                    ifFormat : '%Y-%m-%e',
+		                    button : 'img_calendar_sm',
+		                    align : 'Bl',
+		                    singleClick : true
+		                });
+	                </script>	
+					</td>
+				</tr>
+			</table>
+			<p>&nbsp;</p>
+			<div class="grid">
+				<table border="0"  cellspacing="0" class="data" width="100%" cellspacing="0">
+		        	<thead>
+						<tr class="headings">
+							<th class="a-center"><?php echo $this->__('Picture'); ?></th>
+							<th class="a-center"><?php echo $this->__('Product'); ?></th>
+							<th class="a-center"><?php echo $this->__('Qty'); ?></th>
+							<th class="a-center"><?php echo $this->__('Ordered Qty'); ?></th>
+							<th class="a-center"><?php echo $this->__('Already Delivered Qty'); ?></th>
+							<th class="a-center"><?php echo $this->__('Remaining Qty'); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+							$collection = $this->getOrder()->getProducts();
+							foreach ($collection as $item)
+							{
+								if ($item->getpop_qty() > $item->getpop_supplied_qty())
+								{
+									$remaining_qty = ($item->getpop_qty() - $item->getpop_supplied_qty());
+									echo '<tr>';
+									$product = mage::getModel('catalog/product')->load($item->getpop_product_id());
+									$productImage = Mage::getBaseUrl('media').'catalog/product'.$product->getsmall_image(); //mage::helper('catalog/image')->init($product, 'small_image')->resize(50, 50);
+									echo '<td><img src="'.$productImage.'" width="50" height="50"></td>';
+									echo '<td>'.$item->getpop_product_name().' ('.$product->getsku().')</td>';
+									//Si on doit bloquer les qte recues (cad qu'elles ne soient pas supérieure à la qte commandée
+									if ((mage::getStoreConfig('purchase/purchase_order/check_delivery_qty') == 1) && ($remaining_qty < 100))
+									{
+										echo '<td class="a-center">';
+										echo '<select id="add_sm_qty_'.$item->getpop_product_id().'"  name="add_sm_qty_'.$item->getpop_product_id().'">';
+										for ($i=0;$i<=$remaining_qty;$i++)
+											echo '<option value="'.$i.'">'.$i.'</option>';
+										echo '</select>';
+										echo '</td>';										
+									}
+									else 
+									{
+										echo '<td class="a-center"><input type="text" id="add_sm_qty_'.$item->getpop_product_id().'" name="add_sm_qty_'.$item->getpop_product_id().'" value="0"></td>';									
+									}
+									echo '<td class="a-center">'.$item->getpop_qty().'</td>';
+									echo '<td class="a-center">'.$item->getpop_supplied_qty().'</td>';
+									echo '<td class="a-center">'.$remaining_qty.'</td>';
+									echo '</tr>';
+								}
+							}
+						?>
+					</tbody>
+				</table>
+			</div>
+		</fieldset>
+</div>

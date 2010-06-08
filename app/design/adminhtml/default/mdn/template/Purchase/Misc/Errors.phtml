@@ -1,0 +1,42 @@
+<?php $list = $this->getList(); ?>
+
+<div class="entry-edit">
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Products Stock Errors')?></h3></td>
+        </tr>
+    </table>
+</div>
+
+        <div class="grid">
+            <table cellspacing="0" class="data" width="100%">
+            	<thead>
+	                <tr class="headings">
+	                    <th class="a-center"><?php echo $this->__('Product')?></th>
+	                    <th class="a-center"><?php echo $this->__('Ordered Qty')?></th>
+	                    <th class="a-center"><?php echo $this->__('Reserved Qty')?></th>
+	                    <th class="a-center"><?php echo $this->__('Stock')?></th>
+	                    <th class="a-center"><?php echo $this->__('Other')?></th>
+	                    <th class="a-center"><?php echo $this->__('Action')?></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+                	<?php foreach ($list as $item): ?>
+		                <tr>
+		                		<td class="a-center"><?php echo $item['product_name']; ?>&nbsp;</td>
+		                		<td class="a-center"><?php echo $item['ordered_qty']; ?>&nbsp;</td>
+		                		<td class="a-center"><?php echo $item['reserved_qty']; ?>&nbsp;</td>
+		                		<td class="a-center"><?php echo $item['stock']; ?>&nbsp;</td>
+		                		<td class="a-center"><?php echo $item['other']; ?>&nbsp;</td>
+		                		<td class="a-center"><a href="<?php echo $this->getUrl('Purchase/Misc/ComputeStock', array('product_id' => $item['product_id'])); ?>">Compute stocks</a>&nbsp;</td>
+		                </tr>
+                	<?php endforeach; ?>
+                <tbody>
+            </table>
+        </div>
+
+        <div align="right">If Error, displays "stored value / expected value"</div>
+
+</div>

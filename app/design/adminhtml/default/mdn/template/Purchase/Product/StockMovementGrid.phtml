@@ -1,0 +1,55 @@
+<?php echo $this->getGridParentHtml() ?>
+
+<div id="div_stock_movement">
+	
+	<form id="form_add_sm" name="form_add_sm" method="GET" action="<?php echo $this->getUrl('Purchase/StockMovement/Add'); ?>">
+	<input type="hidden" id="sm_product_id" name="sm_product_id" value="<?php echo $this->getProductId(); ?>">
+
+	<div class="grid">
+		<table cellspacing="0" class="data" width="100%" cellspacing="0">
+        	<thead>
+                <tr class="headings">
+					<th class="a-center" bgcolor="#cccccc" colspan="5"><?php echo $this->__('Add Stock Movement')?></td>
+				</tr>
+			</thead>
+        	<thead>
+                <tr class="headings">
+					<th class="a-center">Date</th>
+					<th class="a-center">Type</th>
+					<th class="a-center"><?php echo $this->__('Qty')?></th>
+					<th>Description</th>
+					<th class="a-center">Action</th>
+				</tr>
+			</thead>
+			<tr>
+				<td align="center">
+			    	<input size="8" type="text" id="sm_date" name="sm_date" value="<?php echo date('Y-m-d'); ?>">
+			    	<img src="<?php echo $this->getSkinUrl('images/purchase/grid-cal.gif') ?>" class="v-middle" id="img_sm_date" />
+			        <script type="text/javascript">
+			            Calendar.setup({
+			                inputField : 'sm_date',
+			                ifFormat : '%Y-%m-%e',
+			                button : 'img_sm_date',
+			                align : 'Bl',
+			                singleClick : true
+			            });
+			        </script>	
+				</td>
+				<td align="center">
+					<?php echo $this->GetTypeCombo('sm_type'); ?>
+				</td>
+				<td align="center">
+					<input type="text" name="sm_qty" id="sm_qty" size="3">
+				</td>
+				<td align="center">
+					<input type="text" name="sm_description" id="sm_description" size="40">
+				</td>
+				<td align="center">
+					<input type="submit" value="<?php echo $this->__('Add')?>">
+				</td>
+			</tr>
+			</table>
+		</div>
+	</form>
+
+</div>

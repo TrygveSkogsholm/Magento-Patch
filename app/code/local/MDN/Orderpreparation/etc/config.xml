@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <MDN_Orderpreparation>
+            <version>2.1</version>
+            <depends>
+            	<MDN_Purchase />
+         	</depends>
+        </MDN_Orderpreparation>
+    </modules>
+    <global>
+    	<helpers>
+            <Orderpreparation>
+                <class>MDN_Orderpreparation_Helper</class>
+            </Orderpreparation>
+        </helpers>
+       	<blocks>
+            <Orderpreparation>
+            	<class>MDN_Orderpreparation_Block</class>
+           	</Orderpreparation>
+        </blocks>
+   	   	<models>
+   	   		            
+            <Orderpreparation>
+                <class>MDN_Orderpreparation_Model</class>
+                <resourceModel>Orderpreparation_mysql4</resourceModel>
+            </Orderpreparation>
+            
+            <Orderpreparation_mysql4>
+                <class>MDN_Orderpreparation_Model_Mysql4</class>
+                <!-- defini les tables utilisables -->
+                <entities>
+                    <ordertoprepare>
+                        <table>order_to_prepare</table>
+                    </ordertoprepare>
+                    <ordertoprepareitem>
+                        <table>order_to_prepare_item</table>
+                    </ordertoprepareitem>
+                    <ordertopreparepending>
+                        <table>order_to_prepare_pending</table>
+                    </ordertopreparepending>
+                    <CarrierTemplate>
+                    	<table>order_preparation_carrier_template</table>
+                    </CarrierTemplate>
+                    <CarrierTemplateField>
+                    	<table>order_preparation_carrier_template_fields</table>
+                    </CarrierTemplateField>
+                </entities>
+            </Orderpreparation_mysql4>
+            
+   	   </models>
+   	   <resources>
+        	<Orderpreparation_setup>
+				<setup>
+					<module>MDN_Orderpreparation</module>
+					<class>Mage_Eav_Model_Entity_Setup</class>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</Orderpreparation_setup>
+            <Orderpreparation_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </Orderpreparation_write>
+            <Orderpreparation_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </Orderpreparation_read>
+        </resources>	
+      
+    </global>
+    <adminhtml>
+		<acl>
+	        <resources>
+	            <admin>
+	                <children>
+	                	<sales>
+	                		<children>
+				                <order_preparation module="Orderpreparation">
+			                        <title>Order Preparation</title>
+			                    </order_preparation>
+	                		</children>
+	                	</sales>
+	                    <system>
+	                        <children>
+								<carrier_template module="Orderpreparation">
+										<title>Carrier Templates</title>
+								</carrier_template>
+	                            <config>
+	                                <children>
+	                                    <orderpreparation module="Orderpreparation">
+											<title>Order Preparation</title>
+	                                    </orderpreparation>
+	                                </children>
+	                            </config>
+	                        </children>
+	                    </system>
+	                </children>
+	            </admin>
+	         </resources>
+	    </acl>
+	    <!-- rajoute un menu dans la partie admin -->
+		<menu>
+            <sales>
+                <children>
+                    <order_preparation translate="title" module="Orderpreparation">
+                        <title>Order Preparation</title>
+                        <action>OrderPreparation/OrderPreparation</action>
+                    </order_preparation>
+                </children>
+             </sales>
+             <system>
+                <children>
+                    <carrier_template translate="title" module="Orderpreparation">
+                        <title>Carrier templates</title>
+                        <action>OrderPreparation/CarrierTemplate/Grid</action>
+                        <sort_order>900</sort_order>
+                    </carrier_template>
+                </children>
+             </system>
+        </menu>
+		<layout>
+            <updates>
+                <orderpreparation>
+                    <file>orderpreparation.xml</file>
+                </orderpreparation>
+            </updates>
+        </layout>
+	</adminhtml>
+	<frontend>
+        <routers>
+            <Orderpreparation>
+                <use>standard</use>
+                <args>
+                    <module>MDN_Orderpreparation</module>
+                    <frontName>OrderPreparation</frontName>
+                </args>
+            </Orderpreparation>
+        </routers>
+        <!-- on inscrit notre fichier layout pour qu'il soit parse par magento (sinon il n'est pas considere) -->
+        <layout>
+            <updates>
+                <orderpreparation>
+                    <file>orderpreparation.xml</file>
+                </orderpreparation>
+            </updates>
+        </layout>
+    </frontend>  
+    
+    <admin>
+    	<routers>
+            <Orderpreparation>
+                <use>admin</use>
+                <args>
+                    <module>MDN_Orderpreparation</module>
+                    <frontName>OrderPreparation</frontName>
+                </args>
+            </Orderpreparation>
+        </routers>
+    </admin>
+    
+    <default>
+    	<orderpreparation>
+    		<general>
+		    	<carriers_class>MDN_Orderpreparation_Model_Carrier_Microjet,MDN_Orderpreparation_Model_Carrier_Expinet,MDN_Orderpreparation_Model_Carrier_Exaprint,MDN_Orderpreparation_Model_Carrier_Fedex</carriers_class>
+		    	<order_management_delay>3</order_management_delay>
+	    	</general>
+	    	<order_weight_calculation>
+	    		<additional_weight_value>0</additional_weight_value>
+	    	</order_weight_calculation>
+	    	<printing_options>
+	    		<print_invoice_twice_if_taxless>0</print_invoice_twice_if_taxless>
+	    		<print_invoices>1</print_invoices>
+	    		<print_shipments>1</print_shipments>
+	    		<print_comments>1</print_comments>
+	    	</printing_options>
+	    	<order_preparation_step>
+	    		<show_print_picking_list>1</show_print_picking_list>
+	    	</order_preparation_step>
+	    	<commit_button_actions>
+	    		<create_shipments_invoices>1</create_shipments_invoices>
+	    		<print_documents>1</print_documents>
+	    		<print_shipping_label>1</print_shipping_label>
+	    	</commit_button_actions>
+	    </orderpreparation>
+    </default>
+    
+</config> 

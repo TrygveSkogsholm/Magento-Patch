@@ -1,0 +1,23 @@
+
+<center>
+<div class="entry-edit">
+<fieldset>
+
+	&nbsp; 
+	
+	<?php foreach($this->getButtons() as $button): ?>
+	
+		<button onclick="<?php echo $button['onclick']; ?>" class="scalable" type="button"><span><?php echo $button['position'].'. '.$button['caption']; ?></span></button> &nbsp; 
+
+	<?php endforeach; ?>
+
+	
+</fieldset>
+</div>
+
+<?php if (mage::getStoreConfig('orderpreparation/misc/show_download_client_computer') == 1): ?>
+	<p><font color="red"><i><?php echo $this->__('To be able to print picking list, documents dans shipping label, you must install <a href="http://www.maisondulogiciel.com/ressources/MagentoClientComputer.rar">Magento Client Computer software</a> on your computer...'); ?></i></font></p>
+<?php endif; ?>
+
+</center>
+

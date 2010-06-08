@@ -1,0 +1,35 @@
+	<div class="clear"></div>
+	<div class="box-right">
+        <div class="entry-edit">
+            <div class="entry-edit-head">
+                <h4><?php echo Mage::helper('purchase')->__('Payment validation') ?></h4>
+            </div>
+            <form name="form_payment" id="form_payment" action="<?php echo $this->getSubmitUrl(); ?>" method="GET">
+            	<input type="hidden" value="<?php echo $this->getOrder()->getId(); ?>" id="order_id" name="order_id" />
+	            <fieldset>
+	            	<table border="0" width="100%">
+	            	<tr>
+	            		<td><?php echo Mage::helper('purchase')->__('Payment validated') ?> : </td>
+	            		<td>
+	            			<select name="payment_validated" id="payment_validated">
+	            				<option value="0" <?php if ($this->getOrder()->getpayment_validated() == 0) { echo " selected "; } ?>><?php echo Mage::helper('purchase')->__('No') ?></option>
+	            				<option value="1" <?php if ($this->getOrder()->getpayment_validated() == 1) { echo " selected "; } ?>><?php echo Mage::helper('purchase')->__('Yes') ?></option>
+	            			</select>
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<td><?php echo Mage::helper('purchase')->__('Valid for Supply needs / reservation processes') ?> : </td>
+	            		<td>
+	            			<?php if ($this->getOrder()->IsValidForPurchaseProcess()) { echo $this->__('Yes'); } else { echo $this->__('No'); }?>
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<td colspan="2" align="center">
+	            			<?php echo $this->getChildHtml('submit_button') ?>
+	            		</td>
+	            	</tr>
+	            	</table>
+	            </fieldset>
+            </form>
+        </div>
+    </div>

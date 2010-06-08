@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!-- ce fichier doit se trouver dans adminhtml/default/default sinon pas pris en compte.. -->
+<layout version="0.1.0">
+
+	<default>
+		<reference name="head">
+			<action method="addJs"><script>mdn/onePagePreparation.js</script></action>
+		</reference>
+	</default>
+    
+    <orderpreparation_orderpreparation_edit>
+    	<reference name="content">
+    		<block type="Orderpreparation/OrderPreparationEdit" name="orderpreparationedit" template="Orderpreparation/OrderPreparationEdit.phtml">
+	           <block type="Orderpreparation/OrderContentGrid" name="ordercontentgrid" as="ordercontentgrid" template="Orderpreparation/OrderContentGrid.phtml">
+	           </block>
+	           <block type="Orderpreparation/Progressgraph" name="progressgraph" as="progressgraph" template="Orderpreparation/Progressgraph.phtml">
+	           </block>
+    		</block>
+    	</reference>
+    </orderpreparation_orderpreparation_edit>
+    
+	<adminhtml_sales_order_view>
+        <reference name="sales_order_tabs">
+                <action method="addTab"><name>order_preparation</name><block>Orderpreparation/Adminhtml_Sales_Order_View_Tab_Preparation</block></action>
+        </reference>
+    </adminhtml_sales_order_view>
+    
+
+    <orderpreparation_carriertemplate_importtracking>
+    	<reference name="content">
+           <block type="Orderpreparation/Header" name="onepagepreparationheader" as="onepagepreparationheader" template="Orderpreparation/Header.phtml">
+           </block>
+           <block type="Orderpreparation/CarrierTemplate_ImportTracking" name="importtracking" as="importtracking" template="Orderpreparation/CarrierTemplate/ImportTracking.phtml">
+           </block>
+    	</reference>    	
+    </orderpreparation_carriertemplate_importtracking>
+    
+ 	<orderpreparation_carriertemplate_grid>
+    	<reference name="content">
+           <block type="Orderpreparation/CarrierTemplate_Grid" name="carriertemplategrid" as="carriertemplategrid" template="Orderpreparation/CarrierTemplate/Grid.phtml">
+           </block>
+    	</reference>
+    </orderpreparation_carriertemplate_grid>
+
+    <orderpreparation_carriertemplate_edit>
+    	<reference name="content">
+           <block type="Orderpreparation/CarrierTemplate_Edit" name="carriertemplateedit" as="carriertemplateedit" template="Orderpreparation/CarrierTemplate/Edit.phtml">
+	           <block type="Orderpreparation/CarrierTemplate_Fields" name="fields_export" as="fields_export" template="Orderpreparation/CarrierTemplate/Fields.phtml">
+	           </block>
+	           <block type="Orderpreparation/CarrierTemplate_Fields" name="fields_import" as="fields_import" template="Orderpreparation/CarrierTemplate/Fields.phtml">
+	           </block>
+           </block>
+    	</reference>
+    </orderpreparation_carriertemplate_edit>
+
+    <orderpreparation_carriertemplate_new>
+    	<reference name="content">
+           <block type="Orderpreparation/CarrierTemplate_New" name="carriertemplatenew" as="carriertemplatenew" template="Orderpreparation/CarrierTemplate/New.phtml">
+           </block>
+    	</reference>
+    </orderpreparation_carriertemplate_new>
+    
+    <orderpreparation_onepagepreparation_index>
+    	<reference name="content">
+	           <block type="Orderpreparation/Header" name="onepagepreparationheader" as="onepagepreparationheader" template="Orderpreparation/Header.phtml">
+	           </block>
+	           <block type="Orderpreparation/Adminhtml_OnePagePreparation" name="onepagepreparation" as="onepagepreparation" template="Orderpreparation/OnePagePreparation.phtml">
+	           </block>
+    	</reference>
+    </orderpreparation_onepagepreparation_index>
+    
+</layout>

@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <MDN_ClientComputer>
+            <version>1.0</version>
+        </MDN_ClientComputer>
+    </modules>
+    <global>
+    	<helpers>
+            <ClientComputer>
+                <class>MDN_ClientComputer_Helper</class>
+            </ClientComputer>
+        </helpers>
+       	<blocks>
+            <ClientComputer>
+            	<class>MDN_ClientComputer_Block</class>
+           	</ClientComputer>
+        </blocks>
+   	   	<models>
+            <ClientComputer>
+                <class>MDN_ClientComputer_Model</class>
+                <resourceModel>ClientComputer_mysql4</resourceModel>
+            </ClientComputer>
+            
+            <ClientComputer_mysql4>
+                <class>MDN_ClientComputer_Model_Mysql4</class>
+                <entities>
+                    <Action>
+                        <table>client_computer_operation</table>
+                    </Action>
+                </entities>
+            </ClientComputer_mysql4>
+            
+        </models>   
+        <resources>
+        	<ClientComputer_setup>
+				<setup>
+					<module>MDN_ClientComputer</module>
+					<class>Mage_Eav_Model_Entity_Setup</class>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</ClientComputer_setup>
+            <ClientComputer_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </ClientComputer_write>
+            <ClientComputer_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </ClientComputer_read>
+        </resources>	
+    </global>
+    
+    <adminhtml>
+		<menu>
+            <system>
+                <children>
+                    <client_computer_log translate="title" module="BackgroundTask">
+                        <title>Client computer</title>
+                        <action>ClientComputer/Admin/Grid</action>
+                        <sort_order>900</sort_order>
+                    </client_computer_log>
+                </children>
+             </system>
+        </menu>
+		<acl>
+	        <resources>
+	            <admin>
+	                <children>
+	                    <system>
+	                        <children>
+	                            <config>
+	                                <children>
+	                                    <clientcomputer module="ClientComputer">
+											<title>Client Computer</title>
+	                                    </clientcomputer>
+	                                </children>
+	                            </config>
+	                        </children>
+	                    </system>
+	                </children>
+	            </admin>
+	         </resources>
+	    </acl>
+		<layout>
+            <updates>
+                <ClientComputer>
+                    <file>ClientComputer.xml</file>
+                </ClientComputer>
+            </updates>
+        </layout>
+	 </adminhtml>
+	 
+	<frontend>
+        <routers>
+            <ClientComputer>
+                <use>standard</use>
+                <args>
+                    <module>MDN_ClientComputer</module>
+                    <frontName>ClientComputer</frontName>
+                </args>
+            </ClientComputer>
+        </routers>
+    </frontend>  
+    
+	 <default>
+    	<clientcomputer>
+    		<general>
+    			<mode>ftp</mode>
+    		</general>
+    	</clientcomputer>
+    </default>
+	 
+    <admin>
+    	<routers>
+            <ClientComputer>
+                <use>admin</use>
+                <args>
+                    <module>MDN_ClientComputer</module>
+                    <frontName>ClientComputer</frontName>
+                </args>
+            </ClientComputer>
+        </routers>
+    </admin>
+    
+</config> 

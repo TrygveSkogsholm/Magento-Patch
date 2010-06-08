@@ -1,0 +1,46 @@
+
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Download order list for shipping Software')?></h3></td>
+        </tr>
+    </table>
+</div>
+
+<div class="entry-edit">
+	<fieldset>
+		<?php foreach ($this->getTemplateList() as $item): ?>
+			<p><a href="<?php echo $this->getUrl('OrderPreparation/OnePagePreparation/DownloadCarrierExportFile', array('template_id' => $item->getId())); ?>"><?php echo $this->__('Download for')?> <?php echo $item->getct_name(); ?></a></p>		
+		<?php endforeach; ?>
+	</fieldset>
+</div>
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Import tracking file')?></h3></td>
+            <td align="right">
+                <button onclick="document.getElementById('edit_form').submit();" class="scalable save" type="button"><span><?php echo $this->__('Import')?></span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="entry-edit">
+	<fieldset>
+		<form method="POST" name="edit_form" id="edit_form" enctype="multipart/form-data" action="<?php echo Mage::getUrl('*/*/SubmitTrackingFile'); ?>">
+		<input id="form_key" name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+		<table border="0" style="margin-left: 30px;">
+		<tr>
+			<td width="200"><?php echo $this->__('Shipping Sofware'); ?></td>
+			<td><?php echo $this->getCarrierTemplateAsCombo('ct_id'); ?></td>
+		</tr>
+		<tr>
+			<td width="200"><?php echo $this->__('File'); ?></td>
+			<td	><input type="file" name="file"></td>
+		</tr>
+		</table>
+		</form>
+	</fieldset>
+</div>

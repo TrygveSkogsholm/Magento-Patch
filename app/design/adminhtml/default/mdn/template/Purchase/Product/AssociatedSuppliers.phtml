@@ -1,0 +1,212 @@
+<script>
+
+//*********************************************************************************************************
+//Lie un fournisseur au produit
+function linkSupplier()
+{
+	//recupere les infos
+	var supplier_id = '';
+	var product_id = '';
+	supplier_id = document.getElementById('supplier').value;
+	product_id = document.getElementById('product_id').value;
+	
+	//définit l'url
+	var url = '';
+	url = '<?php echo $this->getUrl('Purchase/Products/LinkSupplier', array('product_id' => 'XXX', 'supplier_id' => 'YYY')); ?>';
+	url = url.replace('XXX', product_id);
+	url = url.replace('YYY', supplier_id);
+	
+	//Appel l'url en ajax
+	var request = new Ajax.Request(url,
+	    {
+	        method:'get',
+	        onSuccess: function onSuccess(transport)
+	        			{
+	        				RefreshAssociatedSuppliers();
+	        			},
+	        onFailure: function onAddressFailure() {alert('error');}
+	    }
+    );
+}
+
+//************************************************************************************************************
+//Rafraichit la liste des suppliers associés
+function RefreshAssociatedSuppliers()
+{
+	//definit l'url
+	var url = '';
+	url = '<?php echo $this->getUrl('Purchase/Products/getAssociatedSuppliers', array('product_id' => $this->getProductId())); ?>';
+	
+	//affiche l'url dans le cadre
+	var updater = new Ajax.Updater('div_complete_associatedsuppliers', url, {method: 'get'});
+}
+
+//************************************************************************************************************
+//Supprime l'association avec un supplier
+function removeSupplier(id)
+{
+	if (confirm('<?php echo $this->__('Are you sure ?'); ?>'))
+	{
+		//définit l'url
+		var url = '';
+		url = '<?php echo $this->getUrl('Purchase/Products/DeleteAssociatedSupplier', array('pps_id' => 'XXX')); ?>';
+		url = url.replace('XXX', id);
+		
+		//Appel en ajax
+		var request = new Ajax.Request(url,
+		    {
+		        method:'get',
+		        onSuccess: function onSuccess(transport)
+		        			{
+		        				//Rafraichit la page
+								RefreshAssociatedSuppliers();
+		        			},
+		        onFailure: function onFailure() 
+		        			{
+		        				alert('error');
+		        			}
+		    }
+	    );
+	}
+}
+
+//************************************************************************************************************
+//charge une association avec un supplier pour l'éditer
+function loadSupplier(Id)
+{
+	//définit l'url
+	var url = '';
+	url = '<?php echo $this->getUrl('Purchase/Products/GetSupplierInformation', array('pps_id' => 'XXX')); ?>';
+	url = url.replace('XXX', Id);
+
+	//Appel en ajax
+	var request = new Ajax.Request(url,
+	    {
+	        method:'get',
+	        onSuccess: function onSuccess(transport)
+	        			{
+	        				//recupere les données
+	        				elementValues = eval('(' + transport.responseText + ')');
+	        				
+	        				//Affiche les données dans les champs
+	        				document.getElementById('pps_num').value = elementValues['pps_num'];
+	        				document.getElementById('pps_comments').value = elementValues['pps_comments'];
+	        				document.getElementById('pps_reference').value = elementValues['pps_reference'];
+	        				document.getElementById('pps_price_position').value = elementValues['pps_price_position'];
+	        				
+	        				//Affiche le calque d'edition
+	        				document.getElementById('div_supplier_edit').style.display = 'block';
+	        			},
+	        onFailure: function onFailure() 
+	        			{
+	        				alert('error');
+							document.getElementById('div_supplier_edit').style.display = 'none';
+	        			}
+	    }
+    );
+	
+}
+
+//************************************************************************************************************
+//sauvegarde les modifs sur le manufacturer
+function SaveAssociatedSupplier()
+{
+	//Save en ajax
+	var url = '';
+	url = '<?php echo $this->getUrl('Purchase/Products/SaveAssociatedSupplier'); ?>';
+	
+    var request = new Ajax.Request(
+        url,
+        {
+            method: 'post',
+            onSuccess: function onSuccess(transport)
+		        			{
+		        				//Rafraichit la page
+								RefreshAssociatedSuppliers();
+		        			},
+			onFailure: function onFailure(transport)
+		        			{
+		        				//Rafraichit la page
+								alert('error');
+		        			},
+            parameters: Form.serialize(document.getElementById('form_associated_suppliers'))
+        }
+    );
+}
+
+</script>
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Associated Suppliers')?></h3></td>
+        </tr>
+    </table>
+</div>
+<div class="entry-edit">
+    
+        <div class="grid">
+			<table cellspacing="0" class="data" width="100%">
+				<thead>
+					<tr class="headings">
+						<th><?php echo $this->__('Name')?></th>
+						<th class="a-center">Date</th>
+						<th class="a-center"><?php echo $this->__('Last Price')?></th>
+						<th class="a-center">Ref</th>
+						<th class="a-center">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+						$Suppliers = $this->getSuppliers();
+						foreach ($Suppliers as $Supplier)
+						{
+							echo '<tr>';
+							echo '<td><a href="'.$this->getUrl('Purchase/Suppliers/Edit').'sup_id/'.$Supplier->getpps_supplier_num().'">'.$Supplier->getsup_name().'</a></td>';
+							echo '<td class="a-center">'.$Supplier->getpps_last_order_date().'</td>';
+							echo '<td class="a-center">'.$Supplier->getpps_last_price().'</td>';
+							echo '<td class="a-center">'.$Supplier->getpps_reference().'&nbsp;</td>';
+							echo '<td class="a-center"><a  href="javascript:loadSupplier('.$Supplier->getpps_num().');">'.$this->__('Edit').'</a> - <a href="javascript:removeSupplier('.$Supplier->getpps_num().');">'.$this->__('Delete').'</a></td>';
+							echo '</tr>';
+						}
+					?>
+				</tbody>
+				<thead>
+					<tr class="headings">
+						<th class="a-center" colspan="5"><?php echo $this->__('Add Supplier')?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="a-center" colspan="5"><?php echo $this->getNonLinkedSuppliersAsCombo(); ?> <input type="button" value="<?php echo $this->__('Add')?>" onclick="linkSupplier();"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div id="div_supplier_edit" style="display: none">
+			<fieldset>
+				<form id="form_associated_suppliers" name="form_associated_suppliers">
+				<input type="hidden" id="pps_num" name="pps_num" value="">
+				<table border="0" width="100%">
+				<tr>
+					<td><?php echo $this->__('Supplier Reference')?></td>
+					<td><input type="text" id="pps_reference" name="pps_reference"></td>
+				</tr>
+				<tr>
+					<td><?php echo $this->__('Price Position')?></td>
+					<td><?php echo $this->getPricePositionAsCombo('pps_price_position'); ?></td>
+				</tr>
+				<tr>
+					<td><?php echo $this->__('Comments')?></td>
+					<td><textarea id="pps_comments" name="pps_comments" cols="50" rows="3"></textarea></td>
+				</tr>
+				<tr>
+					<td><?php echo $this->__('Save')?></td>
+					<td><input type="button" value="<?php echo $this->__('Save')?>" onclick="SaveAssociatedSupplier()"></td>
+				</tr>
+				</table>
+				</form>
+			</fieldset>
+		</div>
+</div>

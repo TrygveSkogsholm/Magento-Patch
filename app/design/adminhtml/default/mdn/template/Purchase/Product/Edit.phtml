@@ -1,0 +1,270 @@
+<script>
+
+//*********************************************************************************************************
+//Méthode permettant d'actualiser les prix à partir d'un élément
+function refreshPrices(from)
+{
+
+	//calcul
+	var price_ttc = 0;
+	var price = 0;
+	var margin_percent = 0;
+	var cost = 0;
+	cost = document.getElementById('cost').value;
+	switch (from)
+	{
+		case 'margin':
+			margin_percent = parseFloat(document.getElementById('margin_percent').value);
+			if (cost == 0)
+			{
+				alert('Unable to compute values as buy price is not defined !');
+				return;
+			}
+			price = cost / (1 - margin_percent / 100);
+			price_ttc = Math.round(price * 1.196 * 100) / 100;
+			break;
+		case 'price':
+			price = document.getElementById('price').value;
+			price_ttc = Math.round(price * 1.196 * 100) / 100;
+			if (cost > 0)
+				margin_percent = (price - cost) / price * 100;
+			break;
+		case 'price_ttc':
+			price_ttc = document.getElementById('price_ttc').value;
+			price = price_ttc / 1.196;
+			if (cost > 0)
+				margin_percent = (price - cost) / price * 100;
+			break;
+	}
+	
+	//affiche
+	document.getElementById('margin_percent').value = margin_percent.toFixed(3);
+	document.getElementById('price').value = price;
+	document.getElementById('price_ttc').value = price_ttc;
+	
+}
+
+//Réalise les traitements d'affichage pour la qte par défaut
+function UpdateStockMiniDefault()
+{
+	if (document.getElementById('use_config_notify_stock_qty').checked)
+	{
+		document.getElementById('div_notity_stock_qty').style.display = 'none';
+		document.getElementById('config_notify_stock_qty').style.display = '';
+	}
+	else
+	{
+		document.getElementById('div_notity_stock_qty').style.display = '';
+		document.getElementById('config_notify_stock_qty').style.display = 'none';
+	}
+	
+}
+
+</script>
+
+<div class="entry-edit">
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Edit Product')?></h3></td>
+            <td align="right">
+                <button onclick="document.location.href='<?php echo $this->getBackUrl()?>'" class="scalable back" type="button"><span><?php echo $this->__('Back')?></span></button>
+                <button onclick="document.location.href='<?php echo $this->getUrl('Purchase/Products/UpdateStock').'product_id/'.$this->getProduct()->getId(); ?>'" class="scalable save" type="button"><span><?php echo $this->__('Update Stock')?></span></button>
+                <button onclick="document.location.href='<?php echo $this->getUrl('Purchase/Products/ComputeBuyPrice').'product_id/'.$this->getProduct()->getId(); ?>'" class="scalable save" type="button"><span><?php echo $this->__('Compute Buy Price')?></span></button>
+                <button onclick="document.getElementById('edit_form').submit();" class="scalable save" type="button"><span><?php echo $this->__('Save')?></span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<form id="edit_form" name="edit_form" action="<?php echo $this->getUrl('*/*/Save')?>">
+<input type="hidden" id="product_id" name="product_id" value="<?php echo $this->getProduct()->getId(); ?>">
+<div class="entry-edit">
+    
+        <fieldset id="my-fieldset">
+            <table cellspacing="0" class="form-list">
+                <tr>
+                    <td width="250">Id</td>
+                    <td class="input-ele"><?php echo $this->getProduct()->getId(); ?></td>
+                    <td rowspan="5" width="100">&nbsp;</td>
+                    <td width="250"><?php echo $this->__('Exclude from Supply Needs')?></td>
+                    <td class="input-ele"><input type="checkbox" value="1" id="exclude_from_supply_needs" name="exclude_from_supply_needs" <?php if ($this->getProduct()->getexclude_from_supply_needs() == 1) { echo ' checked '; } ?>></td>                    
+                </tr>
+                <tr>
+                    <td>Sku</td>
+                    <td class="input-ele"><?php echo $this->getProduct()->getsku(); ?></td>
+                    <td width="250"><?php echo $this->__('Default Purchase Tax Rate')?></td>
+					<td>
+						<?php echo $this->getDefaultPurchaseTaxRateCombo(); ?>
+					</td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td class="input-ele"><?php echo $this->getProduct()->getname(); ?></td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->__('Next Supply Date')?></td>
+                    <td class="input-ele">
+                    	<?php 
+                    		if ($this->getProduct()->getsupply_date() != '')
+	                    		echo $this->formatDate($this->getProduct()->getsupply_date(), 'long'); 
+                    	?>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?php echo$this->__('Default Supply Delay')?></td>
+                    <td class="input-ele"><?php echo $this->getSupplyDelayCombo('default_supply_delay', $this->getProduct()->getdefault_supply_delay()); ?> <?php echo$this->__('days')?></td>
+                </tr>
+            </table>
+        </fieldset>
+</div>
+<script type="text/javascript">
+    var editForm = new varienForm('new_form');
+</script>
+
+
+<table border="0" width="100%">
+<tr>
+<td>
+
+<div class="entry-edit">
+    
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Stock Summary')?></h3></td>
+        </tr>
+    </table>
+</div>
+
+        <div class="grid">
+        	<?php if ($this->getProduct()->getStockItem()->getManageStock()) { ?>
+            <table cellspacing="0" class="data" width="100%">
+            	<thead>
+	                <tr class="headings">
+	                    <th class="a-center">Stock</h3></th>
+	                    <th class="a-center"><?php echo $this->__('Stock Mini')?></th>
+	                    <th class="a-center"><?php echo $this->__('Ordered Qty')?></th>
+	                    <th class="a-center"><?php echo $this->__('Waiting For Delivery Qty')?></th>
+	                    <th class="a-center"><?php echo $this->__('Needed Qty')?></th>
+	                    <th class="a-center"><?php echo $this->__('Status')?></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr>
+	                	<?php $SupplyNeedsObject = $this->getSupplyNeeds(); ?>
+	                    <td class="a-center"><?php echo (int)$this->getProduct()->getStockItem()->getQty(); ?></td>
+	                    <td class="a-center">
+	                    	<div id="div_notity_stock_qty" style="display:<?php if($this->getProduct()->getStockItem()->getuse_config_notify_stock_qty() == 1) { echo "none;"; } ?>"><input size="2" type="text" id="notity_stock_qty" name="notity_stock_qty" value="<?php echo (int)$SupplyNeedsObject['notify_stock_qty']; ?>"></div>
+	                    	<div id="config_notify_stock_qty" style="display:<?php if($this->getProduct()->getStockItem()->getuse_config_notify_stock_qty() != 1) { echo "none;"; } ?>"><?php echo Mage::getStoreConfig('cataloginventory/item_options/notify_stock_qty'); ?></div>
+	                    	<input onclick="UpdateStockMiniDefault();" type="checkbox" name="use_config_notify_stock_qty" value="1" <?php if($this->getProduct()->getStockItem()->getuse_config_notify_stock_qty() == 1) { echo " checked "; } ?> id="use_config_notify_stock_qty"> <?php echo $this->__('Default'); ?>
+	                    </td>
+	                    <td class="a-center"><?php echo (int)$this->getProduct()->getordered_qty(); ?></td>	                    
+	                    <td class="a-center"><?php echo $SupplyNeedsObject['waiting_for_deliver_qty']; ?></td>
+	                    <td class="a-center"><?php echo $SupplyNeedsObject['needed_qty']; ?></td>
+	                    <td class="a-center"><?php echo $this->__($SupplyNeedsObject['status']); ?></td>
+	                </tr>
+                <tbody>
+            </table>
+            <?php } else { ?>
+            	<?php echo $this->__('No Stock Management'); ?>
+            <?php } ?>
+        </div>
+</div>
+
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Pricer')?></h3></td>
+        </tr>
+    </table>
+</div>
+<div class="entry-edit">
+    
+        <div class="grid">
+            <table class="data" cellspacing="0" width="100%">
+            	<thead>
+	                <tr class="headings">
+	                    <th class="a-center"><?php echo $this->__('Buy Price')?></th>
+	                    <th class="a-center"><?php echo $this->__('Sell Price HT')?></th>
+	                    <th class="a-center"><?php echo $this->__('Sell Price TTC')?></th>
+	                    <th class="a-center"><?php echo $this->__('Margin %')?></th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr>
+	                    <td class="a-center"><font color="black"><?php echo $this->getProduct()->getcost(); ?><input type="hidden" id="cost" name="cost" value="<?php echo $this->getProduct()->getcost(); ?>"></font></td>
+	                    <td class="a-center"><input size="5" type="text" id="price" name="price" value="<?php echo $this->getProduct()->getprice(); ?>"><img src="<?php echo $this->getSkinUrl('images/fam_refresh.gif'); ?>" onclick="refreshPrices('price');"></td>
+	                    <td class="a-center"><input size="5" type="text" id="price_ttc" name="price_ttc"><img src="<?php echo $this->getSkinUrl('images/fam_refresh.gif'); ?>" onclick="refreshPrices('price_ttc');"></td>
+	                    <td class="a-center"><input size="5" type="text" id="margin_percent" name="margin_percent"><img src="<?php echo $this->getSkinUrl('images/fam_refresh.gif'); ?>" onclick="refreshPrices('margin');"></td>
+	                </tr>
+	            </tbody>
+			</table>
+		</div>
+</div>
+<script>
+	refreshPrices('price');
+</script>
+
+</td>
+</tr>
+</table>
+
+</form>
+
+<table border="0" width="100%">
+<tr>
+<td>
+
+<div id="div_complete_associatedmanufacturers">
+<?php echo $this->getChildHtml('associatedmanufacturers'); ?>
+</div>
+
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+
+<div id="div_complete_associatedsuppliers">
+<?php echo $this->getChildHtml('associatedsuppliers'); ?>
+</div>
+
+</td>
+</tr>
+</table>
+
+<?php if ($this->getProduct()->getStockItem()->getManageStock()) { ?>
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Supply Orders')?></h3></td>
+        </tr>
+    </table>
+</div>
+
+
+<div id="div_complete_associatedorders">
+<?php echo $this->getChildHtml('associatedorders'); ?>
+</div>
+<?php } ?>
+
+<?php if ($this->getProduct()->getStockItem()->getManageStock()) { ?>
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Stock Movements')?></h3></td>
+        </tr>
+    </table>
+</div>
+<?php echo $this->getChildHtml('stockmovementgrid'); ?>
+<?php } ?>
+
+</div>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <MDN_Customer>
+            <version>2.6</version>
+        </MDN_Customer>
+    </modules>
+    
+    <global>
+    	<models>
+    	    <customer>
+				<rewrite>
+					<customer>MDN_Customer_Model_Customer</customer>
+				</rewrite>
+            </customer>
+   	   	</models>
+		
+<!-- This rewrite rule could be added to the database instead -->
+        <rewrite>
+            <!-- This is an identifier for your rewrite that should be unique -->
+            <!-- THIS IS THE CLASSNAME IN YOUR OWN CONTROLLER -->
+            <MDN_Customer_Customer_account>
+                <from><![CDATA[#^/account/#]]></from>
+                <!-- 
+                    - mymodule matches the router frontname below 
+                    - checkout_cart matches the path to your controller
+                    
+                    Considering the router below, "/mymodule/checkout_cart/" will be 
+                    "translated" to "/MyNameSpace/MyModule/controllers/Checkout/CartController.php" (?)
+                -->
+               <to>/Customer/Account/</to>
+            </MDN_Customer_Customer_account>
+       </rewrite>
+	</global>
+        
+</config>

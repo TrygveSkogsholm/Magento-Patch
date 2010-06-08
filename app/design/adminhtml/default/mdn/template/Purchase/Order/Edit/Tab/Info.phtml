@@ -1,0 +1,277 @@
+<script>
+
+    var productLinksController = Class.create();
+
+    productLinksController.prototype = {
+        initialize : function(fieldId, products, grid) {
+            this.saveField = $(fieldId);
+            this.saveFieldId = fieldId;
+            this.products    = $H(products);
+            this.grid        = grid;
+            this.tabIndex    = 1000;
+            this.grid.rowClickCallback = this.rowClick.bind(this);
+            this.grid.initRowCallback = this.rowInit.bind(this);
+            this.grid.checkboxCheckCallback = this.registerProduct.bind(this);
+            this.grid.rows.each(this.eachRow.bind(this));
+            this.saveField.value = this.serializeObject(this.products);
+            this.grid.reloadParams = {'products[]':this.products.keys()};
+        },
+        eachRow : function(row) {
+            this.rowInit(this.grid, row);
+        },
+        registerProduct : function(grid, element, checked) {
+            if(checked){
+                if(element.inputElements) {
+                    this.products.set(element.value, {});
+                    for(var i = 0; i < element.inputElements.length; i++) {
+                        element.inputElements[i].disabled = false;
+                        this.products.get(element.value)[element.inputElements[i].name] = element.inputElements[i].value;
+                    }
+                }
+            }
+            else{
+                if(element.inputElements){
+                    for(var i = 0; i < element.inputElements.length; i++) {
+                        element.inputElements[i].disabled = true;
+                    }
+                }
+
+                this.products.unset(element.value);
+            }
+            this.saveField.value = this.serializeObject(this.products);
+            this.grid.reloadParams = {'products[]':this.products.keys()};
+        },
+        serializeObject : function(hash) {
+            var clone = hash.clone();
+            clone.each(function(pair) {
+                clone.set(pair.key, encode_base64(Object.toQueryString(pair.value)));
+            });
+            return clone.toQueryString();
+        },
+        rowClick : function(grid, event) {
+            var trElement = Event.findElement(event, 'tr');
+            var isInput   = Event.element(event).tagName == 'INPUT';
+            if(trElement){
+                var checkbox = Element.select(trElement, 'input');
+                if(checkbox[0]){
+                    var checked = isInput ? checkbox[0].checked : !checkbox[0].checked;
+                    this.grid.setCheckboxChecked(checkbox[0], checked);
+                }
+            }
+        },
+        inputChange : function(event) {
+            var element = Event.element(event);
+            if(element && element.checkboxElement && element.checkboxElement.checked){
+                this.products.get(element.checkboxElement.value)[element.name] = element.value;
+                this.saveField.value = this.serializeObject(this.products);
+            }
+        },
+        rowInit : function(grid, row) {
+            var checkbox = $(row).select('.checkbox')[0];
+            var inputs = $(row).select('.input-text');
+            if(checkbox && inputs.length > 0) {
+                checkbox.inputElements = inputs;
+                for(var i = 0; i < inputs.length; i++) {
+                    inputs[i].checkboxElement = checkbox;
+                    if(this.products.get(checkbox.value) && this.products.get(checkbox.value)[inputs[i].name]) {
+                        inputs[i].value = this.products.get(checkbox.value)[inputs[i].name];
+                    }
+                    inputs[i].disabled = !checkbox.checked;
+                    inputs[i].tabIndex = this.tabIndex++;
+                    Event.observe(inputs[i],'keyup', this.inputChange.bind(this));
+                    Event.observe(inputs[i],'change', this.inputChange.bind(this));
+                }
+            }
+        }
+    };
+
+    //***********************************************************************************************************************
+function SubmitOrderForm()
+{
+	//Verifie que tous les produits aient un prix
+	var already_alerted;
+	already_alerted = false;
+	var t_input = document.getElementsByTagName('input');
+	for (var i = 0 ; i < t_input.length ; i ++)
+	{
+		if ((t_input[i].id.indexOf('pop_price_ht_') > -1) && (already_alerted == false))
+		{
+			if (t_input[i].value == 0)
+			{
+				if (!confirm('<?php echo $this->__('Some products buy price are not set'); ?>'))
+					return false;				
+				else
+					already_alerted = true;
+			}
+		}
+	}
+	
+	//Si case sent coché, il faut qu'il y ait une date de livraison
+	if (document.getElementById('po_sent').checked)
+	{
+		var date_delivery = '';
+		date_delivery = document.getElementById('po_supply_date').value;
+		if ((date_delivery == '') || (date_delivery == '0000-00-00'))
+		{
+			alert('<?php echo $this->__('Please fill delivery date field')?>');
+			return;
+		}
+	}
+	
+	document.getElementById('edit_form').submit();
+}
+
+
+</script>
+
+<style>
+
+.span-help span
+{								   
+    position       :  absolute;
+    top            :  -2000em;
+    left           :  -2000em;
+    width          :  1px;
+    height         :  1px;
+    overflow       :  hidden; 
+    background     :  #ffffe1;   /* Définition du fond, sinon on a le même que notre lien */
+    border         :  1px solid #000000; /* Définition des bordures */
+    text-decoration: none;
+    color: black;
+    text-align: left;
+}  
+
+
+.span-help:hover span
+{								   
+	top        :  auto;
+    left       :  auto;
+    width      :  400px;
+    height     :  auto;
+    overflow   :  visible;
+    text-decoration: none;
+}  
+
+</style>
+
+<input name="form_key" id="form_key" type="hidden" value="<?php echo $this->getFormKey() ?>" />
+<input type="hidden" id="po_num" name="po_num" value="<?php echo $this->getOrder()->getId(); ?>">
+<input type="hidden" id="supply_needs_ids" name="supply_needs_ids" value="">
+<div class="entry-edit">
+    
+	    <div class="entry-edit-head"> 
+		    <h4 class="icon-head head-edit-form fieldset-legend">General</h4> 
+	    </div>
+        <fieldset id="my-fieldset">
+            <table cellspacing="0" class="form-list">
+                <tr>
+                    <td class="label" width="25%">Id</td>
+                    <td class="input-ele" width="25%"><input type="textbox" id="po_order_id" name="po_order_id" value="<?php echo $this->getOrder()->getpo_order_id(); ?>"></td>
+                    <td rowspan="10">&nbsp;</td>
+                    <td class="label" width="25%"><?php echo $this->__('Currency'); ?></td>
+                    <td class="input-ele" width="25%"><?php echo $this->getCurrencyAsCombo('po_currency', $this->getOrder()->getpo_currency()); ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo $this->__('Order Date'); ?></td>
+                    <td class="input-ele">
+                    	<input size="8" type="text" id="po_date" name="po_date" value="<?php echo $this->getOrder()->getpo_date(); ?>">
+                    	<img src="<?php echo $this->getSkinUrl('images/purchase/grid-cal.gif') ?>" class="v-middle" id="img_calendar_date" />
+				        <script type="text/javascript">
+			                Calendar.setup({
+			                    inputField : 'po_date',
+			                    ifFormat : '%Y-%m-%e',
+			                    button : 'img_calendar_date',
+			                    align : 'Bl',
+			                    singleClick : true
+			                });
+		                </script>	
+                    </td>
+                    <!--<td class="label"><?php echo $this->__('Tax Rate'); ?></td>
+                    <td class="input-ele"><input size="6" type="text" id="po_tax_rate" name="po_tax_rate" value="<?php echo $this->getOrder()->getpo_tax_rate(); ?>"> % (<i><?php echo $this->__('For shipping and zoll costs'); ?></i>)</td>-->
+                    <td class="label"><?php echo $this->__('Shipping Method'); ?></td>
+                    <td class="input-ele"><input size="6" type="text" id="ship_speed" name="ship_speed" value="<?php echo $this->getOrder()->getship_speed(); ?>"> (<i><?php echo $this->__('i.e. "Air", "Cargo Ship"'); ?></i>)</td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo $this->__('Delivery Date'); ?></td>
+                    <td class="input-ele">
+                    	<input size="8" type="text" class="required-entry" id="po_supply_date" name="po_supply_date" value="<?php echo $this->getOrder()->getpo_supply_date(); ?>">
+                    	<img src="<?php echo $this->getSkinUrl('images/purchase/grid-cal.gif') ?>" class="v-middle" id="img_calendar_supply_date" />
+				        <script type="text/javascript">
+			                Calendar.setup({
+			                    inputField : 'po_supply_date',
+			                    ifFormat : '%Y-%m-%e',
+			                    button : 'img_calendar_supply_date',
+			                    align : 'Bl',
+			                    singleClick : true
+			                });
+		                </script>	
+                    </td>
+                    <td class="label"><?php echo $this->__('Currency Change Rate'); ?></td>
+                    <td class="input-ele"><input size="3" type="text" id="po_currency_change_rate" name="po_currency_change_rate" value="<?php echo $this->getOrder()->getpo_currency_change_rate(); ?>"></td>
+                </tr>
+                <tr>
+                    <td class="label" width="25%"><?php echo $this->__('Payment Type'); ?></td>
+                    <td class="input-ele" width="25%"><?php echo $this->getPaymentModeAsCombo('po_payment_type', $this->getOrder()->getpo_payment_type()); ?></td>
+                    <td class="label"><?php echo $this->__('Freight Cost'); ?></td>
+                    <td class="input-ele"><input size="6" type="text" id="po_shipping_cost" name="po_shipping_cost" value="<?php echo $this->getOrder()->getpo_shipping_cost(); ?>"> <i>(<?php echo $this->getOrder()->getpo_shipping_cost_base(); ?> eur)</i></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo $this->__('Supplier'); ?></td>
+                    <td class="input-ele"><a href="<?php echo $this->getUrl('Purchase/Suppliers/Edit').'sup_id/'.$this->getSupplier()->getsup_id(); ?>"><?php echo $this->getSupplier()->getsup_name().'</a><br><a href="'.$this->getSupplier()->getsup_mail().'">'.$this->getSupplier()->getsup_mail().'</a><br>'.$this->getSupplier()->getsup_tel(); ?></td>
+                    <!--<td class="label"><?php echo $this->__('Zoll Cost'); ?></td>
+                    <td class="input-ele"><input size="6" type="text" id="po_zoll_cost" name="po_zoll_cost" value="<?php echo $this->getOrder()->getpo_zoll_cost(); ?>"> <i>(<?php echo $this->getOrder()->getpo_zoll_cost_base(); ?> eur)</i></td>-->
+                </tr>
+                <tr>
+                    <td class="label" width="25%"><?php echo $this->__('Carrier'); ?></td>
+                    <td class="input-ele" width="25%"><?php echo $this->getCarriersAsCombo('po_carrier', $this->getOrder()->getpo_carrier()); ?></td>
+                </tr>
+                <tr>
+                    <td class="label" width="25%" rowspan="3"><?php echo $this->__('Comments'); ?></td>
+                    <td class="input-ele" rowspan="3"><textarea id="po_comments" name="po_comments" cols="50" rows="4"><?php echo $this->getOrder()->getpo_comments(); ?></textarea></td>                	
+                </tr>
+                <tr>
+                	<td>Status</td>
+                	<td><?php echo $this->getStatusAsCombo('po_status', $this->getOrder()->getpo_status()); ?></td>
+                </tr>
+                <tr>
+                	<td><?php echo $this->__('Delivery Progress'); ?></td>
+                	<td><?php echo $this->getOrder()->getpo_delivery_percent(); ?>%</td>
+                </tr>
+            </table>
+        </fieldset>
+
+</div>
+
+
+<div align="right">
+<table border="0">
+<tr>
+	<td><h3><?php echo $this->__('Subtotal: '); ?></h3></td>
+	<td width="100"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getTotalWithOutDuty()) ?></h3></td>
+</tr>
+<tr>
+	<td><h3><?php echo $this->__('Duties: '); ?></h3></td>
+	<td width="100"><h3><?php echo ($this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getTaxAmount())) ?></h3></td>
+</tr>
+<tr>
+	<td><h3><?php echo $this->__('Shipping: '); ?></h3></td>
+	<td width="100"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getShip()) ?></h3></td>
+</tr>
+<tr>
+	<td><h3><?php echo $this->__('Grand Total: '); ?></h3></td>
+	<td width="100"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getTotalTtc()) ?></h3></td>
+</tr>
+</table>
+</div>
+
+<script type="text/javascript"> 
+
+function stopRKey(evt) { 
+  var evt = (evt) ? evt : ((event) ? event : null); 
+  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+  if ((evt.keyCode == 13) && (node.type=="text"))  {return false;} 
+} 
+
+document.onkeypress = stopRKey; 
+
+</script>

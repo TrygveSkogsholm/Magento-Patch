@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    
+    <backgroundtask_admin_grid>
+        <reference name="content">
+            <block type="BackgroundTask/Task_Grid" name="backgroundtaskgrid" template="BackgroundTask/Task/Grid.phtml">
+           </block>
+        </reference>
+    </backgroundtask_admin_grid>
+    
+    <backgroundtask_admin_executetaskgroup>
+    	<remove name="menu" />
+    	<remove name="notification_toolbar" />
+    	<reference name="content">
+            <block type="BackgroundTask/Task_GroupExecute" name="backgroundtaskgroupexecute" template="BackgroundTask/Task/GroupExecute.phtml">   		
+           </block>    		
+    	</reference>
+    </backgroundtask_admin_executetaskgroup>
+    
+</layout>

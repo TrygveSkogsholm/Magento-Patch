@@ -1,0 +1,44 @@
+<style>
+.lien-popup span
+{								   
+    position       :  absolute;
+    top            :  -2000em;
+    left           :  -2000em;
+    width          :  1px;
+    height         :  1px;
+    overflow       :  hidden; 
+    background     :  #ffffe1;   /* Définition du fond, sinon on a le même que notre lien */
+    border         :  1px solid #000000; /* Définition des bordures */
+    text-decoration: none;
+    color: black;
+    text-align: left;
+}  
+
+
+.lien-popup:hover span
+{								   
+	top        :  auto;
+    left       :  auto;
+    width      :  300px;
+    height     :  auto;
+    overflow   :  visible;
+}  
+
+</style>
+
+<div class="entry-edit">
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Supply Needs')?></h3></td>
+            <td align="right">
+                <button onclick="document.location.href='<?php echo $this->getUrl('Purchase/SupplyNeeds/RefreshList'); ?>'" class="scalable" type="button"><span><?php echo $this->__('Refresh cache')?></span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<?php echo $this->getGridParentHtml() ?>
+
+</div>
