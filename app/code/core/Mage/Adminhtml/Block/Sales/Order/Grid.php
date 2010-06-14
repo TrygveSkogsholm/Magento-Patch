@@ -31,7 +31,7 @@
  * @package    Mage_Adminhtml
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class MDN_Adminhtml_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Sales_Order_Grid
+class Mage_Adminhtml_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
 
     public function __construct()
@@ -171,11 +171,17 @@ class MDN_Adminhtml_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_Sales_Or
         $this->setMassactionIdField('entity_id');
         $this->getMassactionBlock()->setFormFieldName('order_ids');
 
+        $this->getMassactionBlock()->addItem('picking_list', array(
+             'label'=> Mage::helper('sales')->__('Print Picking List'),
+             //'label'  => $this->getUrl('*/*/pdfshipments'),
+             'url'  => $this->getUrl('*/*/pdfPickingList'),
+        ));
+        
         if (Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/cancel')) {
             $this->getMassactionBlock()->addItem('cancel_order', array(
-                 'label'=> Mage::helper('sales')->__('Cancel'),
-                 'url'  => $this->getUrl('*/*/massCancel'),
-            ));
+                'label'=> Mage::helper('sales')->__('Cancel'),
+                'url'  => $this->getUrl('*/*/massCancel'),
+           ));
         }
 
         if (Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/hold')) {

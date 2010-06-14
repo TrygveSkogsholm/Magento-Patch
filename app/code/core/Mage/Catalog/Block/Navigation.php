@@ -243,7 +243,28 @@ class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
 		}
 		else
 		{
-			$html.= '<ul class="level0">
+
+			$_myStore = Mage::app()->getStore()->getCode();
+			if($_myStore == 'wholesaledefault'){
+				$html.= '<ul class="level0">
+		<li class="level1 nav-1-1">
+		<a href="'.$this->getBaseURL().'frames/mixte-72.html"><span>Mixte</span></a>
+		</li>
+		
+		<li class="level1 nav-1-2">
+		<a href="'.$this->getBaseURL().'frames/polyvalent-55.html"><span>Polyvalent</span></a>
+		</li>
+		
+		<li class="level1 nav-1-3 last">
+		<a href="'.$this->getBaseURL().'frames/rando-74.html"><span>Rando</span></a>
+		</li>
+		
+		
+		</ul>';
+			}
+			else
+			{
+				$html.= '<ul class="level0">
 		<li class="level1 nav-1-1">
 		<a href="'.$this->getBaseURL().'frames/mixte-72.html"><span>Mixte</span></a>
 		</li>
@@ -261,6 +282,7 @@ class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
 		</li>
 		
 		</ul>';
+			}
 		}
 
 
