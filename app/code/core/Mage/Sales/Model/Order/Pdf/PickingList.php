@@ -200,96 +200,118 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 		// this creates a array which contains all products and their fields
 		// most of it is taken up by the bin location logic
 		$n = 0;
+		//count the number of bundles
+		$bundleID = 0;
 		foreach ($order->getAllItems() as $item)
 		{
+
 
 			$productId = Mage::getModel('catalog/product')->getIdBySku($item->getSku());
 			try{
 				$product = Mage::getModel('catalog/product')->load($productId);
-					
-				//Bin location Code - VELO ORANGE ADDITION
-				//retrieve string
-				$rawBinLocationData = $product->getData('binlocation');
-				if ($rawBinLocationData != '')
-				{
-					//split string into individual bin locations
-					$BinLocationData = explode(',', $rawBinLocationData);
 
-					//determine the type of each location
-					// Assign values for the 6 normal bin locations,
-					// create an array for the rest called genericLocation.
-					foreach ($BinLocationData as $location)
-					{
-						//Find the tag
-						$trimmedLocation = trim($location);
-						$location = $trimmedLocation;
-						if(isset($location[1]) == true)
+				// Don't print parents
+				if ($product->isSuper() == false)
+				{
+					// If it's a bundle item add it to the bundled item array
+					if ($product->isComposite() == true) {
+						$children = $item->getChildrenItems();
+						foreach ($children as $child)
 						{
-							if ($location[1] == '!' || $location[1] == '$' || $location[1] == '%')
-							{$tag = ($location[0].$location[1]);}
-							else if ($location[0] == '!' || $location[0] == '$' || $location[0] == '%')
-							{$tag = $location[0];}
+							$bundleItems[$bundleID][]=$child->getSku();
+						}
+						$bundleID += 1;
+						//$page->drawText($options['attributes_info'], 3500, $this->y, 'UTF-8');
+							
+					}
+					else
+					{
+
+						//Bin location Code - VELO ORANGE ADDITION
+						//retrieve string
+						$rawBinLocationData = $product->getData('binlocation');
+						if ($rawBinLocationData != '')
+						{
+							//split string into individual bin locations
+							$BinLocationData = explode(',', $rawBinLocationData);
+
+							//determine the type of each location
+							// Assign values for the 6 normal bin locations,
+							// create an array for the rest called genericLocation.
+							foreach ($BinLocationData as $location)
+							{
+								//Find the tag
+								$trimmedLocation = trim($location);
+								$location = $trimmedLocation;
+								if(isset($location[1]) == true)
+								{
+									if ($location[1] == '!' || $location[1] == '$' || $location[1] == '%')
+									{$tag = ($location[0].$location[1]);}
+									else if ($location[0] == '!' || $location[0] == '$' || $location[0] == '%')
+									{$tag = $location[0];}
+									else
+									{$tag = '';}
+								}
+								else
+								{$tag = '';}
+								//Done finding the tag
+
+								//remove tag
+								$trimmed = trim($location, $tag);
+								$location = $trimmed;
+
+								switch ($tag)
+								{
+									case '!':
+										$Primary = $location;
+										break;
+									case '$':
+										$PrimarySoverstock = $location;
+										break;
+									case '%':
+										$Primaryoverstock = $location;
+										break;
+									case '!!':
+										$Secondary = $location;
+										break;
+									case '$$':
+										$SecondarySoverstock = $location;
+										break;
+									case '%%':
+										$SecondaryOverstock = $location;
+										break;
+										// if there is no tag add it to generic
+									default:
+										$genericLocation = $location;
+								}
+							}
+
+							// assign the final variable
+							if (isset($Primary) == true)
+							{$displayBinLocation = $Primary;}
+							else if (isset($PrimarySoverstock) == true)
+							{$displayBinLocation = $PrimarySoverstock;}
+							else if (isset($Primaryoverstock) == true)
+							{$displayBinLocation = $Primaryoverstock;}
+							else if (isset($Secondary) == true)
+							{$displayBinLocation = $Secondary;}
+							else if (isset($SecondarySoverstock) == true)
+							{$displayBinLocation = $SecondarySoverstock;}
+							else if (isset($SecondaryOverstock) == true)
+							{$displayBinLocation = $SecondaryOverstock;}
 							else
-							{$tag = '';}
+							{$displayBinLocation = $genericLocation;}
 						}
 						else
-						{$tag = '';}
-						//Done finding the tag
-
-						//remove tag
-						$trimmed = trim($location, $tag);
-						$location = $trimmed;
-
-						switch ($tag)
 						{
-							case '!':
-								$Primary = $location;
-								break;
-							case '$':
-								$PrimarySoverstock = $location;
-								break;
-							case '%':
-								$Primaryoverstock = $location;
-								break;
-							case '!!':
-								$Secondary = $location;
-								break;
-							case '$$':
-								$SecondarySoverstock = $location;
-								break;
-							case '%%':
-								$SecondaryOverstock = $location;
-								break;
-								// if there is no tag add it to generic
-							default:
-								$genericLocation = $location;
+							$displayBinLocation = '?';
 						}
-					}
+						// end bin location code.
 
-					// assign the final variable
-					if (isset($Primary) == true)
-					{$displayBinLocation = $Primary;}
-					else if (isset($PrimarySoverstock) == true)
-					{$displayBinLocation = $PrimarySoverstock;}
-					else if (isset($Primaryoverstock) == true)
-					{$displayBinLocation = $Primaryoverstock;}
-					else if (isset($Secondary) == true)
-					{$displayBinLocation = $Secondary;}
-					else if (isset($SecondarySoverstock) == true)
-					{$displayBinLocation = $SecondarySoverstock;}
-					else if (isset($SecondaryOverstock) == true)
-					{$displayBinLocation = $SecondaryOverstock;}
-					else
-					{$displayBinLocation = $genericLocation;}
+						$Products[$n] = array("BinLocation"=>$displayBinLocation,"Qty"=>number_format($item->getQtyOrdered()),"SKU"=>$product->getSku(),"Name"=>$product->getName());
+						$n=$n+1;
+					}
 				}
-				else
-				{
-					$displayBinLocation = '?';
-				}
-				// end bin location code.
-					
-				$Products[$n] = array("BinLocation"=>$displayBinLocation,"Qty"=>number_format($item->getQtyOrdered()),"SKU"=>$product->getSku(),"Name"=>$product->getName());
-				$n=$n+1;
 			}
 			catch (Exception $e)
 			{
@@ -319,7 +341,7 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 			$sorted;
 		}
 		$Products = $sorted;
-			
+
 
 		//how long is it?
 		$numofproducts = count($Products);
@@ -330,26 +352,26 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 			if ($this->y < 15) {
 				$page = $this->newPageCustom(array('table_header' => true),$order->getRealOrderId());
 			}
-				
+
 			if(($i%2) == 0)
 			{
 				$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.9));
 				$page->drawRectangle(25, $this->y+21, 570, $this->y+1,Zend_Pdf_Page::SHAPE_DRAW_FILL);
 			}
-				
-				
+
+
 			$this->_setFontRegular($page, 18);
-				
+
 			//check box
 			$page->setFillColor($white);
 			$page->setLineColor($darkGrey);
 			$page->drawRectangle(26, $this->y+20, 44, $this->y+2);
-				
+
 			$page->setFillColor($darkGrey);
-				
+
 			//color for columns
 			$page->setLineColor(new Zend_Pdf_Color_GrayScale(0.8));
-				
+
 			//large bin location logic
 			if ((strlen($Products[$i]["BinLocation"])) <= 4)
 			{
@@ -368,9 +390,9 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 				$caption = $this->WrapTextToWidth($page, 'Bin location string too long(somehow)', 80);
 				$offset = $this->DrawMultilineText($page, $caption, 50, $this->y+13, 10, 0.2, 10);
 			}
-				
+
 			$page->drawLine(150, $this->y+21, 150, $this->y);
-				
+
 			//greater than one logic
 			if($Products[$i]["Qty"]==1)
 			{
@@ -385,7 +407,7 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 				$this->drawTextInBlock($page, $Products[$i]["Qty"], 150, $this->y+3, 60, 22);
 			}
 			$page->drawLine(210, $this->y+21, 210, $this->y);
-				
+
 			//small sku logic - Outdated thanks to Annette
 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.1));
 			if(strlen($Products[$i]["SKU"]) <= 7)
@@ -399,7 +421,7 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 				$page->drawText(substr($Products[$i]["SKU"], 0, 11), 216, $this->y+5, 'UTF-8');
 			}
 			$page->drawLine(305, $this->y+21, 305, $this->y);
-				
+
 			//name changing size
 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.3));
 			$this->_setFontRegular($page, 12);
@@ -417,9 +439,9 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 				}
 				$this->_setFontRegular($page, $FontSize);
 			}
-				
+
 			$page->drawText($Products[$i]["Name"], 310, $this->y+6, 'UTF-8');
-				
+
 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.6));
 
 			$page->setLineColor($grey);
@@ -428,7 +450,28 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 			$this->y -=22;
 		}
 
-
+		//Bundle Message
+		if ($bundleID != 0)
+		{
+			$this->_setFontRegular($page, 9);
+			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.4));
+			$page->drawText('Bundle these products.', 30, $this->y, 'UTF-8');
+			$this->y -=14;
+			//For each bundle group (items that are bundled under one item)
+			$currentX = 30;
+			foreach ($bundleItems as $BundleGroup)
+			{
+				$lasty1 = $this->y+10;
+				//For each item in the bundle
+				foreach ($BundleGroup as $bundleItem)
+				{
+					$page->drawText($bundleItem, $currentX, $this->y, 'UTF-8');
+					$this->y -=10;
+				}
+				$page->drawRectangle($currentX-3, $lasty1, $currentX+67, $this->y+7,Zend_Pdf_Page::SHAPE_DRAW_STROKE);
+				$currentX +=70;
+			}
+		}
 		//some more translation stuff
 
 
@@ -449,9 +492,9 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 		$this->y = 800;
 
 		if (!empty($settings['table_header'])) {
-				
-				
-				
+
+
+
 			$this->_setFontRegular($page, 8);
 			$page->setFillColor(new Zend_Pdf_Color_GrayScale(0.1));
 			$page->drawText('#'.$ordernumber, 30, $this->y+20, 'UTF-8');
