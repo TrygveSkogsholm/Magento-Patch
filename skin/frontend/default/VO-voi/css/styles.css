@@ -883,6 +883,7 @@ border:none;
 .products-list .product-name a { color:#444; text-decoration:underline; }
 .products-list .product-name a:hover { text-decoration:none; }
 .products-list .price-box { float:left; margin:4px 13px 0 0; }
+.products-list .price-box  { float:left; margin:4px 13px 0 0; }
 .products-list .availability { float:left; margin:3px 0 0; }
 .products-list .desc { clear:both; padding:6px 0 0; margin:0 0 13px; line-height:1.35; }
 .products-list .desc .link-more { font-size:11px; }
@@ -933,8 +934,8 @@ border:none;
 .price-box .price { font-size:13px; font-weight:bold; color:#003366; }
 
 /* Regular price */
-.regular-price { color:#003366; }
-.regular-price .price { font-size:13px; font-weight:bold; color:#003366; }
+.regular-price { color:#cc6600; }
+.regular-price .price { font-size:13px; color:#cc6600; font-weight:normal; }
 
 /* Old price */
 .old-price { margin:0; }
@@ -950,9 +951,9 @@ border:none;
 .minimal-price { margin:0; }
 .minimal-price .price-label { font-size:12px; font-weight:bold; white-space:nowrap; }
 
-.minimal-price-link { display:block; font-size:12px; text-decoration:underline; color:#444; }
-.minimal-price-link .label {color:#444;}
-.minimal-price-link .price { font-weight:normal; color:#444; }
+.minimal-price-link { display:block; font-size:14px; text-decoration:none; color:#41527E; }
+.minimal-price-link .label {color:black;}
+.minimal-price-link .price { font-weight:bold; color:#41527E; font-size:16px }
 
 /* Including tax */
 .price-including-tax { display:block; color:#888; }
@@ -1001,7 +1002,7 @@ f/********** Product Prices > */
 /* Tier Prices */
 .tier-prices { margin:10px 0; padding:10px; background:#f4f9ea; border:1px solid #ddd; }
 .tier-prices .benefit { font-style:italic; font-weight:bold; }
-.tier-prices .price { font-weight:bold;; }
+.tier-prices .price {font-size:16px; font-weight:bold; }
 
 .tier-prices-grouped li .price { font-weight:bold; }
 

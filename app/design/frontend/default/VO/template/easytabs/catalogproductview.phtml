@@ -93,9 +93,9 @@
     
     
     
-    <div class="short-description">
+    <!-- <div class="short-description">
 				<?php echo $this->getChildHtml('description') ?>
-			</div>
+			</div>-->
     <script type="text/javascript">
     //<![CDATA[
             var productAddToCartForm = new VarienForm('product_addtocart_form');
@@ -109,9 +109,9 @@
     </div>
 
     <div class="product-collateral">
-       <!-- <?php if (!Mage::getStoreConfig('easy_tabs/general/descriptiontabbed')):?>
+       <?php if (!Mage::getStoreConfig('easy_tabs/general/descriptiontabbed')):?>
 	        <?php echo $this->getChildHtml('description') ?>
-        <?php endif;?>-->
+        <?php endif;?>
         <?php echo $this->getChildHtml('additional') ?>
         <?php echo $this->getChildHtml('upsell_products') ?>
         <?php echo $this->getChildHtml('product_additional_data') ?>
