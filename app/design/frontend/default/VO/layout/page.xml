@@ -144,6 +144,7 @@ Default layout, loads most of the pages
     </print>
 
      <!-- Custom page layout handles -->
+     
     <page_empty translate="label">
         <label>All Empty Layout Pages</label>
         <reference name="root">

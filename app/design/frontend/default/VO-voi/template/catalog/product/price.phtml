@@ -61,6 +61,29 @@
     <?php $_finalPrice = $_taxHelper->getPrice($_product, $_product->getFinalPrice()) ?>
     <?php $_finalPriceInclTax = $_taxHelper->getPrice($_product, $_product->getFinalPrice(), true) ?>
     <?php $_weeeDisplayType = $_weeeHelper->getPriceDisplayType(); ?>
+    
+        <?php if ($this->getDisplayMinimalPrice() && $_minimalPriceValue && $_minimalPriceValue < $_product->getFinalPrice()): ?>
+
+        <?php $_minimalPriceDisplayValue = $_minimalPrice; ?>
+        <?php if ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, array(0, 1, 4))): ?>
+            <?php $_minimalPriceDisplayValue = $_minimalPrice+$_weeeTaxAmount; ?>
+        <?php endif; ?>
+
+        <?php if ($this->getUseLinkForAsLowAs()):?>
+        <a href="<?php echo $_product->getProductUrl(); ?>" class="minimal-price-link">
+        <?php else:?>
+        <span class="minimal-price-link">
+        <?php endif?>
+            <span class="label"><?php echo $this->__('Dealer Price:') ?></span>
+            <span class="price" id="product-minimal-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
+                <?php echo $_coreHelper->currency($_minimalPriceDisplayValue,true,false) ?>
+            </span>
+        <?php if ($this->getUseLinkForAsLowAs()):?>
+        </a>
+        <?php else:?>
+        </span>
+        <?php endif?>
+    <?php endif; /* if ($this->getDisplayMinimalPrice() && $_minimalPrice && $_minimalPrice < $_finalPrice): */ ?>
     <?php if ($_finalPrice == $_price): ?>
         <?php if ($_taxHelper->displayBothPrices()): ?>
             <?php if ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 0)): // including ?>
@@ -152,14 +175,13 @@
             <?php endif; ?>
         <?php else: ?>
             <?php if ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 0)): // including ?>
-            	<span class="price-label"><?php echo 'MSRP' ?></span>
                 <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                     <?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
                 </span>
             <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 1)): // incl. + weee ?>
-            	<span class="price-label"><?php echo 'MSRP' ?></span>
+            
                 <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
-                    <?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
+                    <span class="price-label"><?php echo 'MSRP: ' ?></span><?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
                 </span>
                 <span class="weee">(<small>
                     <?php foreach ($_weeeTaxAttributes as $_weeeTaxAttribute): ?>
@@ -170,7 +192,7 @@
                 </small>)</span>
             <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 4)): // incl. + weee ?>
                 <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
-                    <?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
+                    <span class="price-label"><?php echo 'MSRP: ' ?></span><?php echo $_coreHelper->currency($_price+$_weeeTaxAmount,true,true) ?>
                 </span>
                 <span class="weee">(<small>
                     <?php foreach ($_weeeTaxAttributes as $_weeeTaxAttribute): ?>
@@ -180,8 +202,8 @@
                     <?php endforeach; ?>
                 </small>)</span>
             <?php elseif ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, 2)): // excl. + weee + final ?>
-            <span class="price-label"><?php echo 'MSRP' ?></span>
                 <span class="regular-price"><?php echo $_coreHelper->currency($_price,true,true) ?></span><br />
+                <span class="price-label"><?php echo 'MSRP: ' ?></span>
                 <?php foreach ($_weeeTaxAttributes as $_weeeTaxAttribute): ?>
                     <span class="weee">
                         <small>
@@ -194,6 +216,7 @@
                 </span>
             <?php else: ?>
                 <span class="regular-price" id="product-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
+                <span class="price-label"><?php echo 'MSRP: ' ?></span>
                     <?php echo $_coreHelper->currency($_price,true,true) ?>
                 </span>
             <?php endif; ?>
@@ -360,28 +383,7 @@
 
     <?php endif; /* if ($_finalPrice == $_price): */ ?>
 
-    <?php if ($this->getDisplayMinimalPrice() && $_minimalPriceValue && $_minimalPriceValue < $_product->getFinalPrice()): ?>
 
-        <?php $_minimalPriceDisplayValue = $_minimalPrice; ?>
-        <?php if ($_weeeTaxAmount && $_weeeHelper->typeOfDisplay($_product, array(0, 1, 4))): ?>
-            <?php $_minimalPriceDisplayValue = $_minimalPrice+$_weeeTaxAmount; ?>
-        <?php endif; ?>
-
-        <?php if ($this->getUseLinkForAsLowAs()):?>
-        <a href="<?php echo $_product->getProductUrl(); ?>" class="minimal-price-link">
-        <?php else:?>
-        <span class="minimal-price-link">
-        <?php endif?>
-            <span class="label"><?php echo $this->__('Dealer Price:') ?></span>
-            <span class="price" id="product-minimal-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
-                <?php echo $_coreHelper->currency($_minimalPriceDisplayValue,true,false) ?>
-            </span>
-        <?php if ($this->getUseLinkForAsLowAs()):?>
-        </a>
-        <?php else:?>
-        </span>
-        <?php endif?>
-    <?php endif; /* if ($this->getDisplayMinimalPrice() && $_minimalPrice && $_minimalPrice < $_finalPrice): */ ?>
     </div>
 
 <?php else: /* if (!$_product->isGrouped()): */ ?>
