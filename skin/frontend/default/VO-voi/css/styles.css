@@ -875,13 +875,13 @@ border:none;
 .page-empty .products-grid { width:684px; margin:0 auto; }
 
 /* View Type: List */
-.products-list li.item { border-bottom:1px solid black; padding:2px 1px; }
+.products-list li.item { border-bottom:1px solid #C9C8D7; }
 .products-list li.item.last { border-bottom:0; }
 .products-list .product-shop { margin-left:105px; }
-.products-list .product-image { float:left; width:76px; height:76px; margin:0 0 0px; border:1px solid black; }
+.products-list .product-image { float:left; width:80px; height:80px; margin:0 0 0px; border-right:1px solid #C9C8D7; }
 .products-list .product-name { font-size:14px; margin:0 0 6px; }
-.products-list .product-name a { color:#444; text-decoration:underline; }
-.products-list .product-name a:hover { text-decoration:none; }
+.products-list .product-name a { color:#444; text-decoration:none;font-size:16px; }
+.products-list .product-name a:hover { text-decoration:none;  }
 .products-list .price-box { float:left; margin:4px 13px 0 0; }
 .products-list .price-box  { float:left; margin:4px 13px 0 0; }
 .products-list .availability { float:left; margin:3px 0 0; }
@@ -1531,7 +1531,7 @@ f/********** Product Prices > */
 
 /* Block: Account Information */
 .dashboard .box-info {}
-.dashboard .box-info h4 { font-size:11px; font-weight:bold; }
+.dashboard .box-info h4 { font-size:11px; font-weight:bold; color:#282560; }
 
 /* Block: Reviews */
 .dashboard .box-reviews .box-head { background:#f1f1f1; padding:2px 10px; margin:0 0 12px; }

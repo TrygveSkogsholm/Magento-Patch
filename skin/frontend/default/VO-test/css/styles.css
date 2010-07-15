@@ -1532,7 +1532,7 @@ f/********** Product Prices > */
 
 /* Block: Account Information */
 .dashboard .box-info {}
-.dashboard .box-info h4 { font-size:11px; font-weight:bold; }
+.dashboard .box-info h4 { font-size:11px; font-weight:bold; color: #E3861F; }
 
 /* Block: Reviews */
 .dashboard .box-reviews .box-head { background:#f1f1f1; padding:2px 10px; margin:0 0 12px; }
