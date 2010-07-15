@@ -5,7 +5,7 @@
  I am creating this picking list from scratch because the module we bought doesn't seem to be
  easily modified to make what we need.
 
- In OrderController.php I created a picking list action that should call this with a order
+ In OrderController.php I created a picking list action that should call this with an order array
  object as the argument.
 
  in Grid.php over in adminhtml I added the mass action for this.
@@ -27,6 +27,7 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 
 		//creating an instance of a pdf
 		$pdf = new Zend_Pdf();
+		
 		//Connecting this with the new pdf object (I think)
 		$this->_setPdf($pdf);
 
@@ -106,8 +107,23 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 		}
 		else
 		{
-			$this->_setFontRegular($page, 26);
-			$page->drawText(substr($order->getShippingAddress()->getRegion(), 0, 14), 395, $this->y+8, 'UTF-8');
+			$this->_setFontRegular($page, 32);
+			$actualWidth = 175;
+			$initialWidth = $this->widthForStringUsingFontSize2($order->getShippingAddress()->getRegion(), $page->getFont(), $page->getFontSize());
+
+			if ($initialWidth >= $actualWidth)
+			{
+				$FontSize = $page->getFontSize();
+				$fontType = $page->getFont();
+				$changingString = $order->getShippingAddress()->getRegion();
+				while ($this->widthForStringUsingFontSize2($changingString, $fontType, $FontSize) >= $actualWidth)
+				{
+					$FontSize -=1;
+				}
+				$this->_setFontRegular($page, $FontSize);
+			}
+
+			$page->drawText($order->getShippingAddress()->getRegion(), 395, $this->y+8, 'UTF-8');
 		}
 		$this->_setFontItalic($page, 8);
 		//second row end first
@@ -122,13 +138,13 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 		// Customer full last name
 
 		$actualWidth = 275;
-		$initialWidth = $this->widthForStringUsingFontSize2($order->getCustomerName(), $page->getFont(), $page->getFontSize());
+		$initialWidth = $this->widthForStringUsingFontSize2($order->getShippingAddress()->getName(), $page->getFont(), $page->getFontSize());
 
 		if ($initialWidth >= $actualWidth)
 		{
 			$FontSize = $page->getFontSize();
 			$fontType = $page->getFont();
-			$changingString = $order->getCustomerName();
+			$changingString = $order->getShippingAddress()->getName();
 			while ($this->widthForStringUsingFontSize2($changingString, $fontType, $FontSize) >= $actualWidth)
 			{
 				$FontSize -=1;
@@ -136,7 +152,7 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 			$this->_setFontRegular($page, $FontSize);
 		}
 
-		$page->drawText($order->getCustomerName(), 25, $this->y, 'UTF-8');
+		$page->drawText($order->getShippingAddress()->getName(), 25, $this->y, 'UTF-8');
 		$page->drawLine(304, $this->y+30, 304, $this->y-10);
 
 		// Shipping Speed
@@ -153,7 +169,25 @@ class Mage_Sales_Model_Order_Pdf_PickingList extends MDN_Orderpreparation_Model_
 		$page->drawLine(380, $this->y-20, 570, $this->y-20);
 		$page->drawLine(380, $this->y-40, 570, $this->y-40);
 
-
+		//Comments Box
+		if ($order->getState() == 'holded')
+		{
+			$this->_setFontBold($page, 25);
+			$caption = $this->WrapTextToWidth($page, '< HELD >', 345);
+			$offset = $this->DrawMultilineText($page, $caption, 30, $this->y-35, 40, 0.2, 40);
+			$this->_setFontRegular($page, 25);
+			$TEST = "Bla bla bla edwseufrsdifosdjf sjdfsd sdfju sdsjds sasdh ashd as shds ah flaw nas jdnwnfa wu w nufs a uwn fk a s jwhf js nsd js wnuwf wufn w alsk  fwi nafu sufanw sunf wk sin kw ausn usun uf ajw i sijfwn sufsdfj sidh waks ira wj nfa winjf wie nwi nwi niasn isn fis wi nfu su hdai wji sa hsie hsi hiw lksjd iwj is ia wjmifiuwfi w ifiwifnwif nwifnwifnwia aisnfasisda asidsai s sidjuhfsidf jdf df dfd hfbdh fdl sdfhd bd";
+			$caption = $this->WrapTextToWidth($page, $TEST, 865);
+			$offset = $this->DrawMultilineText($page, $caption, 30, $this->y-50, 10, 0.2, 10);
+		}
+		else
+		{
+			$TEST = "Bla bla bla edwseufrsdifosdjf sjdfsd sdfju sdsjds sasdh ashd as shds ah flaw nas jdnwnfa wu w nufs a uwn fk a s jwhf js nsd js wnuwf wufn w alsk  fwi nafu sufanw sunf wk sin kw ausn usun uf ajw i sijfwn sufsdfj sidh waks ira wj nfa winjf wie nwi nwi niasn isn fis wi nfu su hdai wji sa hsie hsi hiw lksjd iwj is ia wjmifiuwfi w ifiwifnwif nwifnwifnwia aisnfasisda asidsai s sidjuhfsidf jdf df dfd hfbdh fdl sdfhd bd";
+			$caption = $this->WrapTextToWidth($page, $TEST, 865);
+			$offset = $this->DrawMultilineText($page, $caption, 30, $this->y-15, 10, 0.2, 10);		
+		}
+		
+		//Shipping & Cost
 		$this->_setFontRegular($page, 15);
 		$page->drawText($order->getComment(), 27, $this->y, 'UTF-8');
 		$this->_setFontRegular($page, 18);
