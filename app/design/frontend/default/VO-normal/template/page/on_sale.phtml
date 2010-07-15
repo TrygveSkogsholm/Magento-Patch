@@ -1,0 +1,46 @@
+<?php
+/*
+ * Custom Page for specials velo orange
+ *
+ * code found at http://www.magentocommerce.com/boards/viewthread/29762/
+ */
+
+?>
+<div>Hi there</div>
+<?php
+include_once 'app/Mage.php';
+Mage::app();
+Mage::getSingleton('core/session', array('name' => 'frontend'));
+
+$_productCollection = Mage::getResourceModel('catalogsearch/advanced_collection')
+->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes())
+->addMinimalPrice()
+->addStoreFilter();
+
+Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($_productCollection);
+Mage::getSingleton('catalog/product_visibility')->addVisibleInSearchFilterToCollection($_productCollection);
+
+
+$todayDate = date('m/d/y');
+$tomorrow = mktime(0, 0, 0, date('m'), date('d')+1, date('y'));
+$tomorrowDate = date('m/d/y', $tomorrow);
+
+$_productCollection->addAttributeToFilter('special_from_date', array('date' => true, 'to' => $todayDate))
+->addAttributeToFilter('special_to_date', array('or'=> array(
+0 => array('date' => true, 'from' => $tomorrowDate),
+1 => array('is' => new Zend_Db_Expr('null')))
+), 'left');
+
+foreach($_productCollection as $_product){
+	if($_product->getData('special_price')!=null){
+		echo '<img src="'.$this->helper('catalog/image')->init($_product, 'thumbnail')->resize(75).'" alt="'.$_product->getName().'" /><br />';
+		echo $_product->getName().'<br />';
+
+		$specialPrice = $_product->getData('special_price');
+		$orignalPrice = $_product->getData('price');
+		echo number_format($specialPrice, 2)."<br/>";
+		echo number_format($orignalPrice, 2)."<br/>";
+		echo '<a href="http://www.yourwebsite.com/magento/checkout/cart/add?product='.$_product->getId().'&qty;=1">Add To Cart</a><br />';
+	}
+}
+?>
